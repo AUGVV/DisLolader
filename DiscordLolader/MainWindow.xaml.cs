@@ -73,7 +73,7 @@ namespace DiscordLOLader
                 {
                     TxtBox.Text = folderPath[0];
                 }
-            }             
+            }
         }
 
         private void Image_Drop_1(object sender, DragEventArgs e)

@@ -92,13 +92,6 @@ namespace DiscordLOLader.Bot
             {
                 Bot.ConnectedGuild.GetChannel(channelid).SendMessageAsync(embed);
             }
-
-
-
         }
-
-
-
-
     }
 }

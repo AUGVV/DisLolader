@@ -42,7 +42,7 @@ namespace DiscordLOLader.MainCore
             GuildId = BotCore.GuildId.ToString();
             PictureSouse = (BitmapImage)Bitmap(new Uri(@"pack://application:,,,/Resources/Imager.png"));
             VideoSouse = (BitmapImage)Bitmap(new Uri(@"pack://application:,,,/Resources/Imager.png"));
-            GuildImage = BotCore.GiveBotThumb();
+            GuildImage = BotCore.GetGuildThumb();
             PictureSend.MessageCompleted += PictureCompleted;
             Color = EmbedSend.ColorsList;
             CountLabel = "0";
@@ -74,16 +74,6 @@ namespace DiscordLOLader.MainCore
 
 
         }
-
-
-
-
-
-
-
-
-
-
 
 
         private Channel _selChannel;

@@ -43,7 +43,6 @@ namespace DiscordLOLader.Bot
             this.ColorName = ColorName;
             this.color = color;
             this.ColorFill = new SolidColorBrush(Color.FromRgb(color.R,color.G,color.B));
-
         }
     }
 }

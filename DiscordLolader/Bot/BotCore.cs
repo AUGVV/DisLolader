@@ -6,12 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
 namespace DiscordLOLader.Bot
@@ -26,8 +23,6 @@ namespace DiscordLOLader.Bot
 
         public ulong GuildId { get; set; }
 
-        Config Config = new Config();
-
         public List<Guild> GuildsList = new List<Guild>();
 
         public ObservableCollection<Channel> ChannelList = new ObservableCollection<Channel>();
@@ -37,7 +32,7 @@ namespace DiscordLOLader.Bot
         {
             Debug.WriteLine("Bot object");
         }
-        public void indication()
+        public void Indication()
         {
             Debug.WriteLine("Bot object");
         }
@@ -48,7 +43,7 @@ namespace DiscordLOLader.Bot
                 token = "all";
             }
 
-            var configuration = new DiscordConfiguration
+            DiscordConfiguration configuration = new DiscordConfiguration
             {
                 Token = token,
                 TokenType = TokenType.Bot,
@@ -60,112 +55,137 @@ namespace DiscordLOLader.Bot
             Task task = Discord.ConnectAsync();
             try
             {
-                task.Wait(3000); //Wait for connection on             
-                Thread.Sleep(1000);//Wait for connection give all information   
-                if (GiveAllGuilds(channel) == true)
+                task.Wait();          
+                Thread.Sleep(500);
+                if (isGuildReal(channel))
                 {
-                    GiveAllChannel();
-                    GuildsList.Clear();
+                    GetAllChannels();
+                    GuildsClear();
                     return true;
                 }
                 else
                 {
                     Discord.DisconnectAsync();
-                    GuildsList.Clear();
+                    GuildsClear();
                     return false;
                 }
             }
-            catch 
+            catch
             {
-                GuildsList.Clear();         
+                GuildsClear();
                 return false;
             }
         }
 
-        public BitmapImage GiveBotThumb()
+        private void GuildsClear()
         {
-            var image = new BitmapImage();
-            using (WebClient client = new WebClient())
-            {
-                client.DownloadFile(new Uri(ConnectedGuild.IconUrl.ToString()), @$"{Environment.CurrentDirectory}\Cache\GuildIco.jpg)");
-            }
-            image.BeginInit();
-            image.CacheOption = BitmapCacheOption.OnLoad;
-            image.UriSource = new Uri(@$"{Environment.CurrentDirectory}\Cache\GuildIco.jpg)");
-            image.EndInit();
-            
-
-            return image;
+            GuildsList.Clear();
         }
 
-    
-
-
-public bool GiveAllGuilds(string channel)
+        public BitmapImage GetGuildThumb()
         {
-            foreach(var guild in GuildsList)
+            using (WebClient Client = new WebClient())
             {
-                if(guild.GuildId.ToString() == channel)
+                Client.DownloadFile(new Uri(ConnectedGuild.IconUrl.ToString()), @$"{Environment.CurrentDirectory}\Cache\GuildIco.jpg)");
+            }
+            return GetGuildPicture(new BitmapImage());
+        }
+
+        private BitmapImage GetGuildPicture(BitmapImage GuildImage)
+        {
+            GuildImage.BeginInit();
+            GuildImage.CacheOption = BitmapCacheOption.OnLoad;
+            GuildImage.UriSource = new Uri(@$"{Environment.CurrentDirectory}\Cache\GuildIco.jpg)");
+            GuildImage.EndInit();
+            return GuildImage;
+        }
+
+        public bool isGuildReal(string Channel)
+        {
+            foreach(Guild Guild in GuildsList)
+            {
+                if(isGuildId(Channel, Guild))
                 {
-                    GuildId = guild.GuildId;
-                    GuildName = guild.GuildName;
                     return true;
                 }
-                else if (guild.GuildName == channel)
+                else if (isGuildName(Channel, Guild))
                 {
-                    GuildId = guild.GuildId;
-                    GuildName = guild.GuildName;
                     return true;
                 }
             }
             return false;
         }
 
-        private void GiveAllChannel()
+        private bool isGuildId(string Channel, Guild Guild)
         {
-            ConnectedGuild = Discord.GetGuildAsync(GuildId).Result;
-            bool acess;
-            Permissions check;
-            ChannelType type;
-
-            foreach (var channel in ConnectedGuild.Channels)
+            if (Guild.GuildId.ToString() == Channel)
             {
-                acess = false;
-                string[] buffer = channel.Value.ToString().Split(" ");
-
-                check = ConnectedGuild.GetMemberAsync(Discord.CurrentUser.Id).Result.PermissionsIn(channel.Value);
-                type = Discord.GetChannelAsync(channel.Key).Result.Type;
-                
-                if (check.ToString().Contains("SendMessages") == true && check.ToString().Contains("AttachFiles") == true && check.ToString().Contains("EmbedLinks") == true)
-                {
-                     acess = true;
-                }
-
-                if (acess == true && buffer[1].Contains("Category") != true && type == ChannelType.Text)
-                {
-                    ChannelList.Add(new Channel(channel.Key, buffer[1]));
-                }
-            }            
+                SetGuildName(Guild);
+                return true;
+            }
+            return false;
         }
 
+        private bool isGuildName(string Channel, Guild Guild)
+        {
+            if (Guild.GuildName == Channel)
+            {
+                SetGuildName(Guild);
+                return true;
+            }
+            return false;
+        }
+
+        private void SetGuildName(Guild Guild)
+        {
+            GuildId = Guild.GuildId;
+            GuildName = Guild.GuildName;
+        }
+
+        private void GetAllChannels()
+        {
+            ConnectedGuild = Discord.GetGuildAsync(GuildId).Result;
+            foreach (KeyValuePair<ulong, DiscordChannel> Channel in ConnectedGuild.Channels)
+            {
+                AddChanelToList(Channel);
+            }
+        }
+
+        private void AddChanelToList(KeyValuePair<ulong, DiscordChannel> Channel)
+        {
+            string ChannelPermissons = GetChannelPermission(Channel);
+            ChannelType ChannelType = GetChannelType(Channel);
+
+            if (ChannelType == ChannelType.Text && ChannelPermissons.Contains("Send messages") && ChannelPermissons.Contains("Attach files") && ChannelPermissons.Contains("Use embeds"))
+            {
+                ChannelList.Add(new Channel(Channel.Key, Channel.Value.Name));
+            }
+        }
+
+        private ChannelType GetChannelType(KeyValuePair<ulong, DiscordChannel> Channel)
+        {
+            return Discord.GetChannelAsync(Channel.Key).Result.Type;
+        }
+
+        private string GetChannelPermission(KeyValuePair<ulong, DiscordChannel> Channel)
+        {
+            return ConnectedGuild.GetMemberAsync(Discord.CurrentUser.Id).Result.PermissionsIn(Channel.Value).ToPermissionString();
+        }
 
         private Task DiscordReady(DiscordClient sender, ReadyEventArgs e)
         {       
             return Task.CompletedTask;
         }
+
         private Task DiscordGuild(DiscordClient sender, GuildCreateEventArgs e)
         {
             GuildsList.Add(new Guild(e.Guild.Id, e.Guild.Name, e.Guild.BannerUrl));
-            Debug.WriteLine(e.Guild.Id+ e.Guild.Name+e.Guild.IconUrl);
             return Task.CompletedTask;
         }
+
         public void CloseConnection()
         {
             Discord.DisconnectAsync();
         }
-         
-
     }
-
-
 }

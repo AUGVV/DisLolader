@@ -21,9 +21,6 @@ using System.Windows.Shapes;
 
 namespace DiscordLOLader
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
 
@@ -44,14 +41,13 @@ namespace DiscordLOLader
             Autorization = new Autorization(Bot, MainWindow1);
             Autorization.Show();
         }
+
         public void AutorizationSucsses()
         {
             Autorization.Close();
             DataContext = new MainModelView(Bot);
             MainWindow1.Visibility = Visibility.Visible;
-
         }
-
 
         private void MainWindow1_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

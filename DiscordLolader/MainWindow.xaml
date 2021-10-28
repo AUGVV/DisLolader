@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DiscordLOLader" xmlns:maincore="clr-namespace:DiscordLOLader.MainCore" d:DataContext="{d:DesignInstance Type=maincore:MainModelView}"
         mc:Ignorable="d"
+        
         Title="MainWindow" Height="450" Width="800" Background="#FF36393F" WindowStyle="None" ResizeMode="NoResize" MouseLeftButtonDown="MainWindow1_MouseLeftButtonDown" WindowStartupLocation="CenterScreen" WindowState="{Binding MinimizedOn}">
     <Grid>
         <Grid.RowDefinitions>
@@ -20,14 +21,21 @@
         <Ellipse HorizontalAlignment="Left" Height="100" Margin="-19,-15,0,0" Stroke="#FF202225" VerticalAlignment="Top" Width="100" StrokeThickness="28"/>
         <Label  Content="{Binding GuildName, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" Margin="57,-4,0,0" FontSize="16"/>
         <TabControl Grid.Column="1" Margin="0,23,0,0">
-            <TabItem Header="Video/Audio">
+            <TabItem Header="Media">
                 <Grid Background="#FF2F3136">
-                    <Rectangle HorizontalAlignment="Left" Height="272" Margin="10,10,0,0" Stroke="Black" VerticalAlignment="Top" Width="392" Fill="#FF40444B"/>
-                    <TextBox x:Name="TextVidAudBox" HorizontalAlignment="Left" Margin="10,298,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="478" Background="#FF40444B" Foreground="White" FontFamily="Bahnschrift" FontSize="16" IsEnabled="False" Text="{Binding PathToAudVid, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Content="Send" HorizontalAlignment="Left" Margin="458,340,0,0" VerticalAlignment="Top" Height="49" Width="147" Background="#FF202225" Foreground="White"/>
-                    <Button Content="Open" HorizontalAlignment="Left" Margin="488,298,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.883,2.004" Width="69" Height="21" FontFamily="Bahnschrift"/>
-                    <Image HorizontalAlignment="Left" Height="270" Margin="11,11,0,0" VerticalAlignment="Top" Width="390" Source="{Binding VideoSouse}" Drop="Image_Drop_1" AllowDrop="True"/>
-                    <Label Content="Drag&amp;Drop" HorizontalAlignment="Left" Margin="11,11,0,0" VerticalAlignment="Top" FontSize="20" Foreground="#FF919191" FontFamily="Bahnschrift"/>
+                    <Rectangle HorizontalAlignment="Left" Height="272" Margin="10,10,0,0" VerticalAlignment="Top" Width="392" Fill="#FF40444B"/>
+                    <TextBox x:Name="TextVidAudBox" HorizontalAlignment="Left" Margin="410,179,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="196" Background="#FF40444B" Foreground="White" FontFamily="Bahnschrift" FontSize="16" IsEnabled="False" Text="{Binding MediaPath, UpdateSourceTrigger=PropertyChanged}" Height="103"/>
+                    <Button Content="Send" HorizontalAlignment="Center" Margin="0,325,0,0" VerticalAlignment="Top" Command="{Binding SendMedia}" Height="64" Width="594" Background="#FF202225" Foreground="White" FontSize="16" IsEnabled="{Binding MediaSendButtonWork, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Content="Open" HorizontalAlignment="Left" Margin="410,156,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.883,2.004" Width="196" Height="23" FontFamily="Bahnschrift" Background="#FF202225" Foreground="White" FontSize="16" Command="{Binding MediaOpenDialog}" IsEnabled="{Binding MediaOpenButtonWork, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Image HorizontalAlignment="Left" Height="271"  Margin="11,11,0,0" VerticalAlignment="Top" Width="391" Source="{Binding MediaSourse}" Drop="Image_Drop_1" AllowDrop="True" Stretch="Fill" IsEnabled="{Binding MediaDragDrop, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Label Content="Drag&amp;Drop" HorizontalAlignment="Left" Margin="11,11,0,0" VerticalAlignment="Top" FontSize="20" Foreground="#FF919191" FontFamily="Bahnschrift" Width="109.37"/>
+                    <Label Content="Original size:" HorizontalAlignment="Left" Margin="407,10,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
+                    <Label Content="DiscordSize: 8000000 byte" HorizontalAlignment="Left" Margin="408,66,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
+                    <Label Content="New size:" HorizontalAlignment="Left" Margin="408,93,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
+                    <Label Content="Wait" HorizontalAlignment="Center" Margin="0,344,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="Black" FontFamily="Bahnschrift" FontSize="16" IsEnabled="False" IsHitTestVisible="False" Visibility="{Binding WaitMediaLabel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" RenderTransformOrigin="0.464,0.899"/>
+                    <Label Content="{Binding MediaOriginalSize}" HorizontalAlignment="Left" Margin="409,39,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
+                    <Label Content="{Binding MediaNewSize}" HorizontalAlignment="Left" Margin="410,122,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
+                    <ProgressBar HorizontalAlignment="Center" Height="33" Margin="0,287,0,0" VerticalAlignment="Top" Width="595" Value="{Binding MediaProgress}"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Images">

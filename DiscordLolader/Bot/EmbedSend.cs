@@ -1,16 +1,13 @@
 ﻿using DSharpPlus.Entities;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
-using System.Windows.Media;
+
 
 namespace DiscordLOLader.Bot
 {
     class EmbedSend
     {
         BotCore Bot;
-        DiscordChannel Channel;
         public ObservableCollection<Colors> ColorsList = new ObservableCollection<Colors>();
 
         public EmbedSend(BotCore BotRecieved)

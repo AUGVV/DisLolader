@@ -25,20 +25,19 @@ namespace DiscordLOLader.Bot
         public PictureSend(BotCore BotRecieved)
         {
             Bot = BotRecieved;
-            Builder = new DiscordMessageBuilder();
-           
+            Builder = new DiscordMessageBuilder();      
         }
 
         public void PrepareImage(string path, ref string DownloadPath, ref string TempPath, ref string OriginalSize, ref string ResultSize)
         {
             FileInfo file = new FileInfo(path);
-            long Size = file.Length; //Это 100%
-            const double Lock = 800000000; //Это что то от 100 (8000000 * 100)
+            long Size = file.Length; 
+            const double Lock = 800000000; 
             OriginalSize = $"{Size} byte";
 
             Random rnd = new Random();
 
-            string RandTempName = rnd.Next(0, 9).ToString() + rnd.Next(0, 9).ToString() + rnd.Next(0, 9).ToString() + rnd.Next(0, 9).ToString() + rnd.Next(0, 9).ToString() + rnd.Next(0, 9).ToString() + rnd.Next(0, 9).ToString() + rnd.Next(0, 9).ToString();
+            string RandTempName = rnd.Next(0, 99999999).ToString();
             TempPath = @$"{Environment.CurrentDirectory}\Cache\{RandTempName}_temp.png";
             DownloadPath = @$"{Environment.CurrentDirectory}\Cache\{RandTempName}.png";
 
@@ -60,8 +59,8 @@ namespace DiscordLOLader.Bot
                 int TargetWidth = PixWidth - (int)PixWidthPercent;
                 int TargetHeight = PixHeight - (int)PixHeightPercent;
 
-                var BitmapOutput = new BitmapImage();
-                //Prepare for download
+                BitmapImage BitmapOutput = new BitmapImage();
+    
                 BitmapOutput.BeginInit();
                 BitmapOutput.UriSource = new Uri(path);
                 BitmapOutput.DecodePixelHeight = (int)TargetHeight;
@@ -87,8 +86,8 @@ namespace DiscordLOLader.Bot
            
             }
 
-            var BitmapTemp = new BitmapImage();
-            //Prepare for temp image
+            BitmapImage BitmapTemp = new BitmapImage();
+
             BitmapTemp.BeginInit();
             BitmapTemp.UriSource = new Uri(path);
             BitmapTemp.DecodePixelHeight = 100;
@@ -96,14 +95,14 @@ namespace DiscordLOLader.Bot
             BitmapTemp.CacheOption = BitmapCacheOption.None;
             BitmapTemp.EndInit();
 
-            //Encode temp -----------------
+
             BitmapEncoder EncoderTemp = new PngBitmapEncoder();
             EncoderTemp.Frames.Add(BitmapFrame.Create(BitmapTemp));
             using (var fileStream2 = new FileStream(TempPath, FileMode.Create))
             {
                 EncoderTemp.Save(fileStream2);
             }
-            //-----------------
+
         }
 
 

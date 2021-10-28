@@ -17,13 +17,16 @@ namespace DiscordLOLader.Bot
     public class BotCore
     {
         public DiscordClient Discord { get; set; }
+
         public DiscordGuild ConnectedGuild { get; set; }
 
         public string GuildName { get; set; }
 
         public ulong GuildId { get; set; }
 
+
         public List<Guild> GuildsList = new List<Guild>();
+
 
         public ObservableCollection<Channel> ChannelList = new ObservableCollection<Channel>();
 
@@ -55,20 +58,20 @@ namespace DiscordLOLader.Bot
             Task task = Discord.ConnectAsync();
             try
             {
-                task.Wait();          
-                Thread.Sleep(500);
-                if (isGuildReal(channel))
-                {
-                    GetAllChannels();
-                    GuildsClear();
-                    return true;
-                }
-                else
-                {
-                    Discord.DisconnectAsync();
-                    GuildsClear();
-                    return false;
-                }
+                task.Wait();
+                Thread.Sleep(2000);
+                    if (isGuildReal(channel))
+                    {
+                        GetAllChannels();
+                        GuildsClear();
+                        return true;
+                    }
+                    else
+                    {
+                        Discord.DisconnectAsync();
+                        GuildsClear();
+                        return false;
+                    }
             }
             catch
             {

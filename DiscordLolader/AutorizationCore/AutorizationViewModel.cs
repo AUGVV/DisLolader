@@ -16,7 +16,7 @@ namespace DiscordLOLader.AutorizationCore
     {
         private BotCore BotCore;
         private MainWindow Main;
-        Config configs = new Config();
+        Config Configs = new Config();
 
 
         public AutorizationViewModel(BotCore BotRecieved, MainWindow MainRecieved)
@@ -25,8 +25,8 @@ namespace DiscordLOLader.AutorizationCore
             Main = MainRecieved;
             ErrorLabel = System.Windows.Visibility.Hidden;
 
-            _login = configs.Channel;
-            _token = configs.Token;
+            _login = Configs.Channel;
+            _token = Configs.Token;
             _loginEnable = true;
             isBotTokenType();
             isBotLoginType();
@@ -65,7 +65,6 @@ namespace DiscordLOLader.AutorizationCore
             get { return _loginEnable; }
             set
             {
-                // обработка изменения свойства
                 _loginEnable = value;
                 Debug.WriteLine(_loginEnable);
                 OnPropertyChanged("LoginEnable");
@@ -79,7 +78,6 @@ namespace DiscordLOLader.AutorizationCore
             get { return _checked; }
             set
             {
-                // обработка изменения свойства
                 _checked = value;
                 Debug.WriteLine(_checked);
                 OnPropertyChanged("Checked");
@@ -92,7 +90,6 @@ namespace DiscordLOLader.AutorizationCore
             get { return _token; }
             set
             {
-                // обработка изменения свойства
                 _token = value;
                 isBotTokenType();
                 OnPropertyChanged("Token");
@@ -129,7 +126,6 @@ namespace DiscordLOLader.AutorizationCore
             get { return _login; }
             set
             {
-                // обработка изменения свойства
                 _login = value;
                 isBotLoginType();
                 OnPropertyChanged("Token");
@@ -142,7 +138,6 @@ namespace DiscordLOLader.AutorizationCore
             get { return _channelText; }
             set
             {
-                // обработка изменения свойства
                 _channelText = value;
                 OnPropertyChanged("ChannelText");
             }
@@ -154,7 +149,6 @@ namespace DiscordLOLader.AutorizationCore
             get { return _errorLabel; }
             set
             {
-                // обработка изменения свойства
                 _errorLabel = value;
                 OnPropertyChanged("ErrorLabel");
             }
@@ -169,7 +163,6 @@ namespace DiscordLOLader.AutorizationCore
             get { return _botToken; }
             set
             {
-                // обработка изменения свойства
                 _botToken = value;
                 OnPropertyChanged("BotToken");
             }
@@ -181,15 +174,15 @@ namespace DiscordLOLader.AutorizationCore
            Debug.WriteLine($"Try connect token={Token} Login={Login}");
            _loginEnable = false;
            bool isGood = BotCore.Autorization(Token, Login);
-           if(isGood == false)
+           if(!isGood)
            {
                 ErrorLabel = System.Windows.Visibility.Visible;
            }
            else
            {
-                if (_checked == true)
+                if (_checked)
                 {
-                    configs.WriteNewData(Token, Login);
+                    Configs.WriteNewData(Token, Login);
 
                 }
                 ErrorLabel = System.Windows.Visibility.Hidden;
@@ -205,7 +198,5 @@ namespace DiscordLOLader.AutorizationCore
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
-
-
     }
 }

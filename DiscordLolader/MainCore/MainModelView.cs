@@ -20,7 +20,7 @@ namespace DiscordLOLader.MainCore
     {
         private BotCore BotCore;
 
-        private EmbedSend EmbedSend;
+
         private PictureSend PictureSend;
         private MediaSend MediaSend;
 
@@ -28,14 +28,15 @@ namespace DiscordLOLader.MainCore
         private bool isChannelSelected = false;
         public ObservableCollection<Channel> Chan { get; set; }
 
-        public ObservableCollection<Colors> Color { get; set; }
+
 
         public MainModelView(BotCore BotRecieved)
         {
             BotCore = BotRecieved;
             InitMediaPartial();
+            InitEmbedPartial();
             Chan = BotCore.ChannelList;
-            EmbedSend = new EmbedSend(BotCore);
+
             PictureSend = new PictureSend(BotCore);
 
             GuildName = BotCore.GuildName;
@@ -43,14 +44,12 @@ namespace DiscordLOLader.MainCore
             PictureSouse = (BitmapImage)Bitmap(new Uri(@"pack://application:,,,/Resources/Imager.png"));
 
 
-
             GuildImage = BotCore.GetGuildThumb();
             PictureSend.MessageCompleted += PictureCompleted;
 
-            Color = EmbedSend.ColorsList;
-            CountLabel = "0";
+
             ImageDragDrop = true;
-            OverflowText = System.Windows.Visibility.Hidden;
+
             WaitImageLabel = System.Windows.Visibility.Hidden;
         }
 

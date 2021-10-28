@@ -1,18 +1,10 @@
 ﻿using DiscordLOLader.Bot;
 using DiscordLOLader.MVVM;
-using DiscordLOLader.Properties;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -70,8 +62,6 @@ namespace DiscordLOLader.MainCore
             MediaSourse = MediaSend.GetMediaThumb();
             ShowFileData();
             UnlockMediaButtons();
-            WaitMediaLabel = Visibility.Hidden;
-            if (isSendButtonWork) { MediaSendButtonWork = true; }
         }
 
         private void ShowFileData()
@@ -79,7 +69,6 @@ namespace DiscordLOLader.MainCore
             MediaOriginalSize = MediaSend.CurrentSize.ToString();
             MediaNewSize = MediaSend.NewSize.ToString();
         }
-
 
 
 
@@ -92,6 +81,15 @@ namespace DiscordLOLader.MainCore
 
 
 
+        private bool _MediaDragDrop = true;
+        public bool MediaDragDrop
+        {
+            get => _MediaDragDrop;
+            set { _MediaDragDrop = value; OnPropertyChanged("MediaDragDrop"); }
+        }
+
+
+
         private bool _MediaSendButtonWork = false;
         public bool MediaSendButtonWork
         {
@@ -100,7 +98,7 @@ namespace DiscordLOLader.MainCore
         }
 
         private RelayCommand _SendMedia;
-        public RelayCommand SendMedia => _SendMedia ?? (_SendMedia = new RelayCommand(obj => { Debug.WriteLine("AudioVideoSend"); MediaFileSend(); }));
+        public RelayCommand SendMedia => _SendMedia ?? (_SendMedia = new RelayCommand(obj => { MediaFileSend(); }));
 
         private void MediaSendingCompleted(bool button)
         {
@@ -112,7 +110,7 @@ namespace DiscordLOLader.MainCore
         {
             BlockMediaButtons();
             isMediaSending = true;
-            MediaSend.AudVidSend(_SelChannel.ChannelId);
+            MediaSend.MediaFileSend(_SelChannel.ChannelId);
         }
 
         private void BlockMediaButtons()
@@ -120,6 +118,7 @@ namespace DiscordLOLader.MainCore
             MediaTimer.Start();
             WaitMediaLabel = Visibility.Visible;
             isMediaSending = true;
+            MediaDragDrop = false;
             MediaSendButtonWork = false;
             MediaOpenButtonWork = false;
         }
@@ -129,7 +128,8 @@ namespace DiscordLOLader.MainCore
             MediaProgress = 0;
             WaitMediaLabel = Visibility.Hidden;
             isMediaSending = false;
-            MediaSendButtonWork = true;
+            MediaDragDrop = true;
+            if (isSendButtonWork) { MediaSendButtonWork = true; }
             MediaOpenButtonWork = true;
         }
 

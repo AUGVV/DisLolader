@@ -124,6 +124,9 @@
   <data name="Imager" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Imager.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Mp3Thumb" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Mp3Thumb.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="Title" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Title.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>

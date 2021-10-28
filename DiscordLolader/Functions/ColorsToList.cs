@@ -1,23 +1,15 @@
-﻿using DSharpPlus.Entities;
-using System;
+﻿using DiscordLOLader.Bot;
+using DSharpPlus.Entities;
 using System.Collections.ObjectModel;
 
-
-namespace DiscordLOLader.Bot
+namespace DiscordLOLader.Functions
 {
-    class EmbedSend
+    class ColorsToList
     {
-        BotCore Bot;
-        public ObservableCollection<Colors> ColorsList = new ObservableCollection<Colors>();
-
-        public EmbedSend(BotCore BotRecieved)
+        public ObservableCollection<Colors> GetColorList()
         {
-            Bot = BotRecieved;
-            PrepareColors();
-        }
+            ObservableCollection<Colors> ColorsList = new ObservableCollection<Colors>();
 
-        private void PrepareColors()
-        {
             ColorsList.Add(new Colors("Aquamarine", DiscordColor.Aquamarine));
             ColorsList.Add(new Colors("Azure", DiscordColor.Azure));
             ColorsList.Add(new Colors("Black", DiscordColor.Black));
@@ -61,34 +53,7 @@ namespace DiscordLOLader.Bot
             ColorsList.Add(new Colors("Wheat", DiscordColor.Wheat));
             ColorsList.Add(new Colors("White", DiscordColor.White));
             ColorsList.Add(new Colors("Yellow", DiscordColor.Yellow));
-        }
-
-        public void SendMessage(ulong channelid, DiscordColor DisColor, string MainText="", string Title="", string Author = "", string Footer = "", string ImageUrl = "", string Thumbnail = "", string WithUrl = "", bool Time = false)
-        {
-            var embed = new DiscordEmbedBuilder();
-
-            if (MainText != null) { embed.WithDescription(MainText); }
-
-            if (Title != null) { embed.WithTitle(Title); }
-
-            if (Author != null) { embed.WithAuthor(Author); }
-
-            if (Footer != null) { embed.WithFooter(Footer); }
-
-            if (ImageUrl != null) { try { embed.WithImageUrl(ImageUrl); } catch { } }
-
-            if (Thumbnail != null) { try { embed.WithThumbnail(Thumbnail); } catch { } }
-
-            if (WithUrl != null) { try { embed.WithUrl(WithUrl); } catch { } }
-
-            if (Time == true) { embed.WithTimestamp(DateTime.Now); }
-
-            embed.WithColor(DisColor);
-
-            if (embed != null)
-            {
-                Bot.ConnectedGuild.GetChannel(channelid).SendMessageAsync(embed);
-            }
+            return ColorsList;
         }
     }
 }

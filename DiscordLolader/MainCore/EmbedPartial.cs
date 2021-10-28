@@ -18,23 +18,35 @@ namespace DiscordLOLader.MainCore
 {
     public partial class MainModelView : INotifyPropertyChanged
     {
+
+        private EmbedSend EmbedSend;
+        public ObservableCollection<Colors> Color { get; set; }
+
+        private void InitEmbedPartial()
+        {
+            EmbedSend = new EmbedSend(BotCore);
+            Color = EmbedSend.ColorsList;
+            CountLabel = "0";
+            OverflowText = Visibility.Hidden;
+        }
+
         private string _TitleText;
         public string TitleText
         {
             get { return _TitleText; }
-            set { _TitleText = value; isTitleType(); counter(); OnPropertyChanged("TitleText"); }
+            set { _TitleText = value; IsTitleType(); EmbedSend.Title = value; Counter(); OnPropertyChanged("TitleText"); }
         }
 
-        private void isTitleType()
+        private void IsTitleType()
         {
             if (_TitleText.Length > 0)
-            { TitleLabel = System.Windows.Visibility.Hidden; }
+            { TitleLabel = Visibility.Hidden; }
             else if (_TitleText.Length == 0)
-            { TitleLabel = System.Windows.Visibility.Visible; }
+            { TitleLabel = Visibility.Visible; }
         }
 
-        private System.Windows.Visibility _TitleLabel;
-        public System.Windows.Visibility TitleLabel
+        private Visibility _TitleLabel;
+        public Visibility TitleLabel
         {
             get { return _TitleLabel; }
             set { _TitleLabel = value; OnPropertyChanged("TitleLabel"); }
@@ -44,19 +56,19 @@ namespace DiscordLOLader.MainCore
         public string AuthorText
         {
             get { return _AuthorText; }
-            set { _AuthorText = value; isAuthorType(); counter(); OnPropertyChanged("AuthorText"); }
+            set { _AuthorText = value; isAuthorType(); EmbedSend.Author = value; Counter(); OnPropertyChanged("AuthorText"); }
         }
 
         private void isAuthorType()
         {
             if (_AuthorText.Length > 0)
-            { AuthorLabel = System.Windows.Visibility.Hidden; }
+            { AuthorLabel = Visibility.Hidden; }
             else if (_AuthorText.Length == 0)
-            { AuthorLabel = System.Windows.Visibility.Visible; }
+            { AuthorLabel = Visibility.Visible; }
         }
 
-        private System.Windows.Visibility _AuthorLabel;
-        public System.Windows.Visibility AuthorLabel
+        private Visibility _AuthorLabel;
+        public Visibility AuthorLabel
         {
             get { return _AuthorLabel; }
             set { _AuthorLabel = value; OnPropertyChanged("AuthorLabel"); }
@@ -66,19 +78,19 @@ namespace DiscordLOLader.MainCore
         public string DescriptionText
         {
             get { return _DescriptionText; }
-            set { _DescriptionText = value; isDescriprionType(); counter(); OnPropertyChanged("DescriptionText"); }
+            set { _DescriptionText = value; IsDescriprionType(); EmbedSend.MainText = value; Counter(); OnPropertyChanged("DescriptionText"); }
         }
 
-        private void isDescriprionType()
+        private void IsDescriprionType()
         {
             if (_DescriptionText.Length > 0)
-            { DescriptionLabel = System.Windows.Visibility.Hidden; }
+            { DescriptionLabel = Visibility.Hidden; }
             else if (_DescriptionText.Length == 0)
-            { DescriptionLabel = System.Windows.Visibility.Visible; }
+            { DescriptionLabel = Visibility.Visible; }
         }
 
-        private System.Windows.Visibility _DescriptionLabel;
-        public System.Windows.Visibility DescriptionLabel
+        private Visibility _DescriptionLabel;
+        public Visibility DescriptionLabel
         {
             get { return _DescriptionLabel; }
             set { _DescriptionLabel = value; OnPropertyChanged("DescriptionLabel"); }
@@ -88,19 +100,19 @@ namespace DiscordLOLader.MainCore
         public string FooterText
         {
             get { return _FooterText; }
-            set { _FooterText = value; isFooterType(); counter(); OnPropertyChanged("FooterText"); }
+            set { _FooterText = value; IsFooterType(); EmbedSend.Footer = value; Counter(); OnPropertyChanged("FooterText"); }
         }
 
-        private void isFooterType()
+        private void IsFooterType()
         {
             if (_FooterText.Length > 0)
-            { FooterLabel = System.Windows.Visibility.Hidden; }
+            { FooterLabel = Visibility.Hidden; }
             else if (_FooterText.Length == 0)
-            { FooterLabel = System.Windows.Visibility.Visible; }
+            { FooterLabel = Visibility.Visible; }
         }
 
-        private System.Windows.Visibility _FooterLabel;
-        public System.Windows.Visibility FooterLabel
+        private Visibility _FooterLabel;
+        public Visibility FooterLabel
         {
             get { return _FooterLabel; }
             set { _FooterLabel = value; OnPropertyChanged("FooterLabel"); }
@@ -111,19 +123,19 @@ namespace DiscordLOLader.MainCore
         {
             get { return _ImageUrlText; }
             set
-            { _ImageUrlText = value; isImageURLType(); OnPropertyChanged("ImageUrlText"); }
+            { _ImageUrlText = value; IsImageURLType(); EmbedSend.ImageUrl = value; OnPropertyChanged("ImageUrlText"); }
         }
 
-        private void isImageURLType()
+        private void IsImageURLType()
         {
             if (_ImageUrlText.Length > 0)
-            { ImageUrlLabel = System.Windows.Visibility.Hidden; }
+            { ImageUrlLabel = Visibility.Hidden; }
             else if (_ImageUrlText.Length == 0)
-            { ImageUrlLabel = System.Windows.Visibility.Visible; }
+            { ImageUrlLabel = Visibility.Visible; }
         }
 
-        private System.Windows.Visibility _ImageUrlLabel;
-        public System.Windows.Visibility ImageUrlLabel
+        private Visibility _ImageUrlLabel;
+        public Visibility ImageUrlLabel
         {
             get { return _ImageUrlLabel; }
             set { _ImageUrlLabel = value; OnPropertyChanged("ImageUrlLabel"); }
@@ -133,19 +145,19 @@ namespace DiscordLOLader.MainCore
         public string ThumbText
         {
             get { return _ThumbText; }
-            set { _ThumbText = value; isThumbType(); OnPropertyChanged("ThumbText"); }
+            set { _ThumbText = value; isThumbType(); EmbedSend.Thumbnail = value; OnPropertyChanged("ThumbText"); }
         }
 
         private void isThumbType()
         {
             if (_ThumbText.Length > 0)
-            { ThumbLabel = System.Windows.Visibility.Hidden; }
+            { ThumbLabel = Visibility.Hidden; }
             else if (_ThumbText.Length == 0)
-            { ThumbLabel = System.Windows.Visibility.Visible; }
+            { ThumbLabel = Visibility.Visible; }
         }
 
-        private System.Windows.Visibility _ThumbLabel;
-        public System.Windows.Visibility ThumbLabel
+        private Visibility _ThumbLabel;
+        public Visibility ThumbLabel
         {
             get { return _ThumbLabel; }
             set
@@ -156,19 +168,19 @@ namespace DiscordLOLader.MainCore
         public string UrlText
         {
             get { return _UrlText; }
-            set { _UrlText = value; isURLType(); OnPropertyChanged("UrlText"); }
+            set { _UrlText = value; IsURLType(); EmbedSend.WithUrl = value; OnPropertyChanged("UrlText"); }
         }
 
-        private void isURLType()
+        private void IsURLType()
         {
             if (_UrlText.Length > 0)
-            { UrlLabel = System.Windows.Visibility.Hidden; }
+            { UrlLabel = Visibility.Hidden; }
             else if (_UrlText.Length == 0)
-            { UrlLabel = System.Windows.Visibility.Visible; }
+            { UrlLabel = Visibility.Visible; }
         }
 
-        private System.Windows.Visibility _UrlLabel;
-        public System.Windows.Visibility UrlLabel
+        private Visibility _UrlLabel;
+        public Visibility UrlLabel
         {
             get { return _UrlLabel; }
             set { _UrlLabel = value; OnPropertyChanged("UrlLabel"); }
@@ -183,9 +195,9 @@ namespace DiscordLOLader.MainCore
         }
 
 
-        int sum = 0, AutText = 0, DescrText = 0, FootText = 0, TitText = 0;
+        int Sum = 0, AutText = 0, DescrText = 0, FootText = 0, TitText = 0;
 
-        void counter()
+        void Counter()
         {
             if (_AuthorText != null)
             {
@@ -203,32 +215,27 @@ namespace DiscordLOLader.MainCore
             {
                 TitText = _TitleText.Length;
             }
-            sum = AutText + DescrText + FootText + TitText;
-            CountLabel = sum.ToString();
-            if (sum > 4000)
+            Sum = AutText + DescrText + FootText + TitText;
+            CountLabel = Sum.ToString();
+            if (Sum > 4000)
             {
-                OverflowText = System.Windows.Visibility.Visible;
-                if (isChannelSelected == true)
-                {
+                OverflowText = Visibility.Visible;
+                if (isChannelSelected)
                     ButtonSendWork = false;
-                }
             }
-            else if (sum < 4000)
+            else if (Sum < 4000)
             {
-                OverflowText = System.Windows.Visibility.Hidden;
-                if (isChannelSelected == true)
-                {
+                OverflowText = Visibility.Hidden;
+                if (isChannelSelected)
                     ButtonSendWork = true;
-                }
             }
         }
-
 
         private bool _TimeCheck;
         public bool TimeCheck
         {
-            get { return _TimeCheck; }
-            set { _TimeCheck = value; OnPropertyChanged("TimeCheck"); }
+            get => _TimeCheck;
+            set { _TimeCheck = value; EmbedSend.Time = value; OnPropertyChanged("TimeCheck"); }
         }
 
         private bool _ButtonSendWork = false;
@@ -238,25 +245,20 @@ namespace DiscordLOLader.MainCore
             set { _ButtonSendWork = value; OnPropertyChanged("ButtonSendWork"); }
         }
 
-        private System.Windows.Visibility _OverflowText;
-        public System.Windows.Visibility OverflowText
+        private Visibility _OverflowText;
+        public Visibility OverflowText
         {
             get { return _OverflowText; }
             set { _OverflowText = value; OnPropertyChanged("OverflowText"); }
         }
 
-
         private RelayCommand _sendMessage;
-        public RelayCommand SendMessage
+        public RelayCommand SendMessage => _sendMessage ??= new RelayCommand(obj => 
         {
-            get
-            {
-                return _sendMessage ??
-                  (_sendMessage = new RelayCommand(obj =>
-                  {
-                      EmbedSend.SendMessage(_SelChannel.ChannelId, _SelColor.color, _DescriptionText, _TitleText, _AuthorText, _FooterText, _ImageUrlText, _ThumbText, _UrlText, _TimeCheck);
-                  }));
-            }
-        }
+            EmbedSend.SendMessage(_SelChannel.ChannelId, _SelColor.color); 
+            UrlText = EmbedSend.WithUrl; 
+            ImageUrlText = EmbedSend.ImageUrl;
+            ThumbText = EmbedSend.Thumbnail;
+        });
     }
 }

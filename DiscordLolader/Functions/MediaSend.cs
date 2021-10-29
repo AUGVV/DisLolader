@@ -41,7 +41,7 @@ namespace DiscordLOLader.Bot
             {
                 if (CurrentFormat.ToLower() == ".mp3")
                 {
-                    AddThumbImage(Path);
+                    CreateThumbImage(Path);
                     Mp3Compress(Path, CacheFile);
                     if (GetSize(CacheFile + CurrentFormat) > Lock)
                     {
@@ -52,7 +52,7 @@ namespace DiscordLOLader.Bot
                 }
                 else if (CurrentFormat.ToLower() == ".webm" || CurrentFormat.ToLower() == ".mp4")
                 {
-                    AddThumbImage(Path);
+                    CreateThumbImage(Path);
                     WebmCompress(Path, CacheFile);
                     PathToSendFile = $"{CacheFile}.webm";
                     NewSize = GetSize($"{CacheFile}.webm");
@@ -60,7 +60,7 @@ namespace DiscordLOLader.Bot
             }
             else
             {
-                AddThumbImage(Path);
+                CreateThumbImage(Path);
                 PathToSendFile = Path;
                 CurrentSize = NewSize = GetSize(PathToSendFile);
             }
@@ -71,21 +71,14 @@ namespace DiscordLOLader.Bot
         {
             BitmapImage Bitmap = new BitmapImage();
             Bitmap.BeginInit();
-            if (File.Exists(ThumbFile) && CurrentFormat.ToLower() != ".mp3")
-            {
-                Bitmap.UriSource = new Uri(ThumbFile);
-            }
-            else
-            {
-                Bitmap.UriSource = new Uri(@"pack://application:,,,/Resources/Mp3Thumb.png");
-            }
+            Bitmap.UriSource = File.Exists(ThumbFile) && CurrentFormat.ToLower() != ".mp3" ? new Uri(ThumbFile) : new Uri(@"pack://application:,,,/Resources/Mp3Thumb.png");
             Bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
             Bitmap.CacheOption = BitmapCacheOption.OnLoad;
             Bitmap.EndInit();
             return Bitmap;
         }
 
-        private void AddThumbImage(string Path)
+        private void CreateThumbImage(string Path)
         {
             ProcessStartInfo Video_config = new ProcessStartInfo
             {
@@ -100,17 +93,20 @@ namespace DiscordLOLader.Bot
         }
 
         private void GetFileData(string path)
-        {
-            CurrentFormat = GetFormat(path);
-            CurrentSize = GetSize(path);
+        {      
+                CurrentFormat = GetFormat(path);
+                CurrentSize = GetSize(path);
         }
 
+
+        FileStream FileReader; 
         public void MediaFileSend(ulong channelid)
         {
             if (PathToSendFile != "" || !File.Exists(PathToSendFile))
             {
-                Builder.WithFile(GetFileName(OldPath), File.OpenRead(PathToSendFile));
-                Bot.ConnectedGuild.GetChannel(channelid).SendMessageAsync(Builder).ContinueWith(OnEvent);
+                FileReader = File.OpenRead(PathToSendFile);
+                _ = Builder.WithFile(GetFileName(OldPath), FileReader);
+                _ = Bot.ConnectedGuild.GetChannel(channelid).SendMessageAsync(Builder).ContinueWith(OnEvent);
                 Builder.Clear();
             }
         }
@@ -120,10 +116,10 @@ namespace DiscordLOLader.Bot
             ProcessStartInfo Video_config = new ProcessStartInfo
             {
                 FileName = "ffmpeg.exe",
-                Arguments = $@"-i {Path} -y -c:v libvpx-vp9 -quality realtime -speed 15 -b:v 150K -s 401x255 -r 22 -crf 4 -c:a libopus -b:a 96k {CacheFile}.webm",
+                Arguments = $@"-i {Path} -y -c:v libvpx-vp9 -quality realtime -speed 15 -b:v 150K -maxrate 150K  -s 401x255 -r 22 -crf 4 -c:a libopus -b:a 96k {CacheFile}.webm",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
-                CreateNoWindow = false
+                CreateNoWindow = true
             };
             Process Input = Process.Start(Video_config);
             Input.WaitForExit();
@@ -146,31 +142,24 @@ namespace DiscordLOLader.Bot
         private long GetSize(string path)
         {
             FileInfo file = new FileInfo(path);
-            long Size = file.Length;
-            return Size * 100;
+            return file.Length * 100;
         }
 
         private string GetFileName(string path)
         {
             string[] Buffer = path.Split('\\');
-            string Last = Buffer[Buffer.Length - 1];
-            return $"{Last}";
+            return $"{Buffer[^1]}";
         }
-
 
         private string GetFormat(string path)
         {
             string[] Buffer = path.Split('.');
-            string Last = "";
-            foreach (string part in Buffer)
-            {
-                Last = part;
-            }
-            return $".{Last}";
+            return $".{Buffer[^1]}";
         }
 
         private void OnEvent(Task t)
         {
+            FileReader.Close();
             MediaSendingCompleted?.Invoke(true);
         }
     }

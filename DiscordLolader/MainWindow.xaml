@@ -30,28 +30,29 @@
                     <Image HorizontalAlignment="Left" Height="271"  Margin="11,11,0,0" VerticalAlignment="Top" Width="391" Source="{Binding MediaSourse}" Drop="Image_Drop_1" AllowDrop="True" Stretch="Fill" IsEnabled="{Binding MediaDragDrop, UpdateSourceTrigger=PropertyChanged}"/>
                     <Label Content="Drag&amp;Drop" HorizontalAlignment="Left" Margin="11,11,0,0" VerticalAlignment="Top" FontSize="20" Foreground="#FF919191" FontFamily="Bahnschrift" Width="109.37"/>
                     <Label Content="Original size:" HorizontalAlignment="Left" Margin="407,10,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
-                    <Label Content="DiscordSize: 8000000 byte" HorizontalAlignment="Left" Margin="408,66,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
-                    <Label Content="New size:" HorizontalAlignment="Left" Margin="408,93,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
+                    <Label Content="Discord: 800000000 byte" HorizontalAlignment="Left" Margin="407,59,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
+                    <Label Content="New size:" HorizontalAlignment="Left" Margin="407,88,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
                     <Label Content="Wait" HorizontalAlignment="Center" Margin="0,344,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="Black" FontFamily="Bahnschrift" FontSize="16" IsEnabled="False" IsHitTestVisible="False" Visibility="{Binding WaitMediaLabel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" RenderTransformOrigin="0.464,0.899"/>
-                    <Label Content="{Binding MediaOriginalSize}" HorizontalAlignment="Left" Margin="409,39,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
-                    <Label Content="{Binding MediaNewSize}" HorizontalAlignment="Left" Margin="410,122,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
-                    <ProgressBar HorizontalAlignment="Center" Height="33" Margin="0,287,0,0" VerticalAlignment="Top" Width="595" Value="{Binding MediaProgress}"/>
+                    <Label Content="{Binding MediaOriginalSize}" HorizontalAlignment="Left" Margin="407,34,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
+                    <Label Content="{Binding MediaNewSize}" HorizontalAlignment="Left" Margin="407,112,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
+                    <ProgressBar HorizontalAlignment="Center" Height="33" Margin="0,287,0,0" VerticalAlignment="Top" Width="595" Value="{Binding MediaProgress}" Maximum="50"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Images">
                 <Grid Background="#FF2F3136">
                     <Rectangle HorizontalAlignment="Left" Height="276" Margin="10,10,0,0" Stroke="#FF40444B" VerticalAlignment="Top" Width="394" Fill="#FF40444B"/>
                     <Image x:Name="ImageBox" HorizontalAlignment="Left" Height="274" Margin="10,10,0,0" VerticalAlignment="Top" Width="392" Source="{Binding PictureSouse}" AllowDrop="True" Drop="Image_Drop" Stretch="Fill" IsEnabled="{Binding ImageDragDrop, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Content="Send" HorizontalAlignment="Left" Margin="458,340,0,0" VerticalAlignment="Top" Height="49" Width="147.6" Command="{Binding SendPicture}" Background="#FF202225" Foreground="White" FontFamily="Bahnschrift" FontSize="16" IsEnabled="{Binding ButtonImageWork, UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBox x:Name="TxtBox" HorizontalAlignment="Left" Margin="10,301,0,0" TextWrapping="NoWrap" VerticalAlignment="Top" Width="503" Background="#FF40444B" Foreground="White" FontFamily="Bahnschrift" FontSize="16" Text="{Binding PathToPicture, UpdateSourceTrigger=PropertyChanged}" IsEnabled="False"/>
+                    <Button Content="Send" HorizontalAlignment="Center" Margin="0,329,0,0" VerticalAlignment="Top" Height="60" Width="596" Command="{Binding SendPicture}" Background="#FF202225" Foreground="White" FontFamily="Bahnschrift" FontSize="16" IsEnabled="{Binding ButtonImageWork, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox x:Name="TxtBox" HorizontalAlignment="Left" Margin="411,183,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="196" Background="#FF40444B" Foreground="White" FontFamily="Bahnschrift" FontSize="16" Text="{Binding PathToPicture, UpdateSourceTrigger=PropertyChanged}" IsEnabled="False" Height="103"/>
                     <Label Content="Original size:" HorizontalAlignment="Left" Margin="409,10,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
-                    <Label Content="DiscordSize: 8000000 byte" HorizontalAlignment="Left" Margin="409,68,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
-                    <Button Content="Open" HorizontalAlignment="Left" Margin="513,300,0,0" VerticalAlignment="Top" Width="92" Background="#FF202225" Foreground="White" FontFamily="Bahnschrift" FontSize="16" Command="{Binding OpenPathFinder}" IsEnabled="{Binding ButtonOpenWork, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Label Content="Download size:" HorizontalAlignment="Left" Margin="409,102,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
-                    <Label Content="{Binding OriginalSizeLabel}" HorizontalAlignment="Left" Margin="409,36,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="16" FontFamily="Bahnschrift"/>
-                    <Label Content="{Binding ResultSizeLabel}" HorizontalAlignment="Left" Margin="409,131,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
-                    <Label Content="Wait" HorizontalAlignment="Left" Margin="511,350,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="Black" FontFamily="Bahnschrift" FontSize="16" IsEnabled="False" IsHitTestVisible="False" Visibility="{Binding WaitImageLabel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Label Content="Discord: 800000000 byte" HorizontalAlignment="Left" Margin="409,59,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
+                    <Button Content="Open" HorizontalAlignment="Left" Margin="411,160,0,0" VerticalAlignment="Top" Width="196" Background="#FF202225" Foreground="White" FontFamily="Bahnschrift" FontSize="16" Command="{Binding OpenPathFinder}" IsEnabled="{Binding ButtonOpenWork, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Label Content="New size:" HorizontalAlignment="Left" Margin="409,88,0,0" VerticalAlignment="Top" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
+                    <Label Content="{Binding OriginalSizeLabel}" HorizontalAlignment="Left" Margin="409,34,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="16" FontFamily="Bahnschrift"/>
+                    <Label Content="{Binding ResultSizeLabel}" HorizontalAlignment="Left" Margin="409,112,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontFamily="Bahnschrift" FontSize="16"/>
+                    <Label Content="Wait" HorizontalAlignment="Center" Margin="0,345,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="Black" FontFamily="Bahnschrift" FontSize="16" IsEnabled="False" IsHitTestVisible="False" Visibility="{Binding WaitImageLabel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Label Content="Drag&amp;Drop" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="#FF919191" FontSize="20" IsHitTestVisible="False" IsEnabled="False" FontFamily="Bahnschrift"/>
+                    <ProgressBar HorizontalAlignment="Center" Height="33" Margin="0,291,0,0" VerticalAlignment="Top" Width="595" Value="{Binding PictureProgress}" Maximum="50"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Embed" Height="20" VerticalAlignment="Center" Margin="0,0,-4,0">
@@ -105,7 +106,12 @@
         </ListBox>
         <Button Content="X" Grid.Column="1" HorizontalAlignment="Left" Margin="598,2,0,0" VerticalAlignment="Top" Width="21" FontFamily="Bahnschrift" Foreground="White" Background="#FF2B2B2B" BorderBrush="#FF2B2B2B" Command="{Binding Close}"/>
         <Button Content="-" Grid.Column="1" HorizontalAlignment="Left" Margin="574,2,0,0" VerticalAlignment="Top" Width="21" FontFamily="Bahnschrift" Foreground="White" Background="#FF2B2B2B" BorderBrush="#FF2B2B2B" Command="{Binding Turn}"/>
-        <ComboBox HorizontalAlignment="Left" Margin="62,47,0,0" VerticalAlignment="Top" Width="108" Height="14" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        <ComboBox HorizontalAlignment="Left" Margin="62,43,0,0" VerticalAlignment="Top" Width="112" Height="23" Background="{x:Null}" BorderBrush="{x:Null}"  SelectedItem="{Binding SelMode}">
+            <TextBlock>В сети</TextBlock>
+            <TextBlock>Неактивен</TextBlock>
+            <TextBlock>Не беспокоить</TextBlock>
+            <TextBlock>Невидимый</TextBlock>
+        </ComboBox>
         <Label Content="{Binding GuildId}" HorizontalAlignment="Left" Margin="57,20,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="White" FontSize="11" FontFamily="Bahnschrift"/>
     </Grid>
 </Window>

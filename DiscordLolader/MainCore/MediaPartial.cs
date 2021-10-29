@@ -16,14 +16,13 @@ namespace DiscordLOLader.MainCore
         private bool isMediaSending;
         private bool isSendButtonWork;
         private System.Windows.Threading.DispatcherTimer MediaTimer;
-
+        private MediaSend MediaSend;
         private void InitMediaPartial()
         {
             MediaSend = new MediaSend(BotCore);
             MediaSourse = (BitmapImage)Bitmap(new Uri(@"pack://application:,,,/Resources/Imager.png"));
 
             MediaTimer = new System.Windows.Threading.DispatcherTimer();
-
             MediaTimer.Tick += ProgressBarIncrement;
             MediaTimer.Interval = new TimeSpan(0, 0, 1);
 
@@ -37,7 +36,7 @@ namespace DiscordLOLader.MainCore
         public string MediaPath
         {
             get => _MediaPath;
-            set { _MediaPath = value; OnPropertyChanged("MediaPath"); PrepareMedia(); }
+            set { _MediaPath = value; OnPropertyChanged("MediaPath"); if(MediaPath != "") PrepareMedia(); }
         }
 
         private string _MediaOriginalSize = "0 byte";
@@ -66,8 +65,8 @@ namespace DiscordLOLader.MainCore
 
         private void ShowFileData()
         {
-            MediaOriginalSize = MediaSend.CurrentSize.ToString();
-            MediaNewSize = MediaSend.NewSize.ToString();
+            MediaOriginalSize = MediaSend.CurrentSize.ToString() + " byte";
+            MediaNewSize = MediaSend.NewSize.ToString() + " byte";
         }
 
 

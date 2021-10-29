@@ -19,51 +19,63 @@ namespace DiscordLOLader.MainCore
 {
     public partial class MainModelView : INotifyPropertyChanged
     {
-        private string RefDownloadPath = "";
-        private string RefTempPath = "";
-        private string RefSizeOriginal = "";
-        private string RefSizeResult = "";
+        private PictureSend PictureSend;
+        private bool isPictureSending = false;
 
-        private BitmapImage _PictureSouse;
-        public BitmapImage PictureSouse
+        private System.Windows.Threading.DispatcherTimer PictureTimer;
+
+        private void InitPicturePartial()
         {
-            get { return _PictureSouse; }
 
-            set { _PictureSouse = value; OnPropertyChanged("PictureSouse"); }
+            PictureTimer = new System.Windows.Threading.DispatcherTimer();
+            PictureTimer.Tick += PictureBarIncrement;
+            PictureTimer.Interval = new TimeSpan(0, 0, 1);
+
+            PictureSend = new PictureSend(BotCore);
+            PictureSouse = (BitmapImage)Bitmap(new Uri(@"pack://application:,,,/Resources/Imager.png"));
+            ImageDragDrop = true;
+            WaitImageLabel = Visibility.Hidden;
+            PictureSend.MessageCompleted += PictureCompleted;
         }
 
-        private void PreparePicture(string path)
+        private void PictureBarIncrement(object sender, EventArgs e)
         {
-            //Preparing and take all necessary info about image 
-            PictureSend.PrepareImage(path, ref RefDownloadPath, ref RefTempPath, ref RefSizeOriginal, ref RefSizeResult);
-            //Create temp picture and show is in view panel 
-            PictureSouse = (BitmapImage)Bitmap(new Uri(RefTempPath));
-            //Data for labels
-            OriginalSizeLabel = RefSizeOriginal;
-            ResultSizeLabel = RefSizeResult;
-            //If button send on embed working (is depend of channel selection) activating button of image sending
-            if (ButtonSendWork == true) { ButtonImageWork = true; }
+            PictureProgress++;
         }
+
+        private int _PictureProgress = 0;
+        public int PictureProgress
+        {
+            get { return _PictureProgress; }
+            set { _PictureProgress = value; OnPropertyChanged("PictureProgress"); }
+        }
+
 
         private string _PathToPicture;
         public string PathToPicture
         {
             get { return _PathToPicture; }
-            set { _PathToPicture = value; PreparePicture(_PathToPicture); OnPropertyChanged("PathToPicture"); }
+            set { _PathToPicture = value; OnPropertyChanged("PathToPicture"); if(PathToPicture != "") PreparePictureAsync(); }
         }
 
-        private RelayCommand _SendPicture;
-        public RelayCommand SendPicture
+        private async void PreparePictureAsync()
         {
-            get
-            {
-                return _SendPicture ??
-                  (_SendPicture = new RelayCommand(obj =>
-                  {
-                      SendImage();
-                  }));
-            }
+            BlockPictureButtons();
+            await Task.Run(() => PictureSend.PrepareImage(PathToPicture).Wait());
+            PictureSouse = (BitmapImage)PictureSend.GetPictureThumb();
+            GetPictureData();
+            UnblockPictureButtons();
         }
+
+        private void GetPictureData()
+        {
+            OriginalSizeLabel = PictureSend.OriginalSize.ToString();
+            ResultSizeLabel = PictureSend.ResultSize.ToString();
+        }
+
+
+        private RelayCommand _SendPicture;
+        public RelayCommand SendPicture => _SendPicture ??= new RelayCommand(obj => { SendImage(); });
 
         private bool _ImageDragDrop = false;
         public bool ImageDragDrop
@@ -72,23 +84,37 @@ namespace DiscordLOLader.MainCore
             set { _ImageDragDrop = value; OnPropertyChanged("ImageDragDrop"); }
         }
 
-        private void SendImage()
+        void BlockPictureButtons()
         {
+            PictureTimer.Start();
+            WaitImageLabel = Visibility.Visible;
+            isPictureSending = true;
             ButtonImageWork = false;
             ButtonOpenWork = false;
             ImageDragDrop = false;
-            isSending = true;
-            WaitImageLabel = System.Windows.Visibility.Visible;
-            PictureSend.RecieveImage(RefDownloadPath, _SelChannel.ChannelId);
+
+        }
+        void UnblockPictureButtons()
+        {
+            PictureTimer.Stop();
+            PictureProgress = 0;
+            WaitImageLabel = Visibility.Hidden;
+            isPictureSending = false;
+            ButtonOpenWork = true;
+            ImageDragDrop = true;
+            if (ButtonSendWork) { ButtonImageWork = true; }
+        }
+
+
+        private void SendImage()
+        {
+            BlockPictureButtons();
+            PictureSend.RecieveImage(_SelChannel.ChannelId);
         }
 
         private void PictureCompleted(bool button)
         {
-            ButtonImageWork = button;
-            ImageDragDrop = button;
-            isSending = false;
-            ButtonOpenWork = true;
-            WaitImageLabel = System.Windows.Visibility.Hidden;
+            UnblockPictureButtons();
         }
 
         private bool _ButtonImageWork = false;
@@ -99,22 +125,22 @@ namespace DiscordLOLader.MainCore
         }
 
 
-        private string _OriginalSizeLabel;
+        private string _OriginalSizeLabel = "0 byte";
         public string OriginalSizeLabel
         {
             get { return _OriginalSizeLabel; }
             set { _OriginalSizeLabel = value; OnPropertyChanged("OriginalSizeLabel"); }
         }
 
-        private string _ResultSizeLabel;
+        private string _ResultSizeLabel = "0 byte";
         public string ResultSizeLabel
         {
             get { return _ResultSizeLabel; }
             set { _ResultSizeLabel = value; OnPropertyChanged("ResultSizeLabel"); }
         }
 
-        private System.Windows.Visibility _WaitImageLabel;
-        public System.Windows.Visibility WaitImageLabel
+        private Visibility _WaitImageLabel;
+        public Visibility WaitImageLabel
         {
             get { return _WaitImageLabel; }
             set { _WaitImageLabel = value; OnPropertyChanged("WaitImageLabel"); }
@@ -147,6 +173,16 @@ namespace DiscordLOLader.MainCore
         {
             get { return _ButtonOpenWork; }
             set { _ButtonOpenWork = value; OnPropertyChanged("ButtonOpenWork"); }
+        }
+
+
+
+        private BitmapImage _PictureSouse;
+        public BitmapImage PictureSouse
+        {
+            get { return _PictureSouse; }
+
+            set { _PictureSouse = value; OnPropertyChanged("PictureSouse"); }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DiscordLOLader.Bot;
+using DiscordLOLader.Functions;
 using DiscordLOLader.MVVM;
 using DiscordLOLader.Properties;
 using Microsoft.Win32;
@@ -8,8 +9,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -18,39 +17,26 @@ namespace DiscordLOLader.MainCore
 {
     public partial class MainModelView : INotifyPropertyChanged
     {
-        private BotCore BotCore;
-
-
-        private PictureSend PictureSend;
-        private MediaSend MediaSend;
-
-        private bool isSending = false;
-        private bool isChannelSelected = false;
         public ObservableCollection<Channel> Chan { get; set; }
 
+
+        private BotCore BotCore;
+        private bool isChannelSelected = false;     
+        private BotControl BotsControl;
 
 
         public MainModelView(BotCore BotRecieved)
         {
             BotCore = BotRecieved;
+            BotsControl = new BotControl(BotCore);
             InitMediaPartial();
             InitEmbedPartial();
+            InitPicturePartial();
             Chan = BotCore.ChannelList;
-
-            PictureSend = new PictureSend(BotCore);
 
             GuildName = BotCore.GuildName;
             GuildId = BotCore.GuildId.ToString();
-            PictureSouse = (BitmapImage)Bitmap(new Uri(@"pack://application:,,,/Resources/Imager.png"));
-
-
             GuildImage = BotCore.GetGuildThumb();
-            PictureSend.MessageCompleted += PictureCompleted;
-
-
-            ImageDragDrop = true;
-
-            WaitImageLabel = System.Windows.Visibility.Hidden;
         }
 
         public static System.Windows.Media.ImageSource Bitmap(Uri path)
@@ -75,7 +61,7 @@ namespace DiscordLOLader.MainCore
                 ButtonSendWork = true;
                 isSendButtonWork = true;
 
-                if (_PathToPicture != null && !isSending)
+                if (_PathToPicture != null && !isPictureSending)
                 {
                     ButtonImageWork = true;
                 }
@@ -87,6 +73,14 @@ namespace DiscordLOLader.MainCore
                 OnPropertyChanged("SelChannel");
             }
         }
+
+        private TextBlock _SelMode;
+        public TextBlock SelMode
+        {
+            get { return _SelMode; }
+            set { _SelMode = value;  BotsControl.ChangeState(SelMode.Text); OnPropertyChanged("_SelColor"); }
+        }
+
 
         private Colors _SelColor;
         public Colors SelColor
@@ -120,7 +114,7 @@ namespace DiscordLOLader.MainCore
         public RelayCommand Close => _Close ?? (_Close = new RelayCommand(obj => { BotCore.CloseConnection(); Environment.Exit(0); }));
 
         private RelayCommand _RestartApp;
-        public RelayCommand RestartApp => _RestartApp ?? (_RestartApp = new RelayCommand(obj => { Process.Start(@$"{Environment.CurrentDirectory}\DiscordLOLader.exe"); Environment.Exit(0); }));
+        public RelayCommand RestartApp => _RestartApp ?? (_RestartApp = new RelayCommand(obj => { _ = Process.Start(@$"{Environment.CurrentDirectory}\DiscordLOLader.exe"); Environment.Exit(0); }));
 
         private RelayCommand _Turn;
         public RelayCommand Turn

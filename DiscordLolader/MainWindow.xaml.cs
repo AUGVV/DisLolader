@@ -28,6 +28,8 @@ namespace DiscordLOLader
 
         private Autorization Autorization;
 
+        DirectoryInfo WorkDirectory = new DirectoryInfo($@"{Environment.CurrentDirectory}\Cache\");
+
         public MainWindow()
         {
             InitializeComponent();
@@ -37,6 +39,10 @@ namespace DiscordLOLader
         private void autorization()
         {
             Bot = new BotCore();
+            if(!WorkDirectory.Exists)
+            {
+                WorkDirectory.Create();
+            }
             MainWindow1.Visibility = Visibility.Hidden;
             Autorization = new Autorization(Bot, MainWindow1);
             Autorization.Show();

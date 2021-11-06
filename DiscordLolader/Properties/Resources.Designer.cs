@@ -99,5 +99,15 @@ namespace DiscordLOLader.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] WavThumb {
+            get {
+                object obj = ResourceManager.GetObject("WavThumb", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }

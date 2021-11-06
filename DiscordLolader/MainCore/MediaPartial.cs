@@ -19,7 +19,7 @@ namespace DiscordLOLader.MainCore
         private MediaSend MediaSend;
         private void InitMediaPartial()
         {
-            MediaSend = new MediaSend(BotCore, ConvertedFile);
+            MediaSend = new MediaSend(BotCore, ConvertedFile, ThumbCreator);
             MediaSourse = (BitmapImage)Bitmap(new Uri(@"pack://application:,,,/Resources/Imager.png"));
 
             MediaTimer = new System.Windows.Threading.DispatcherTimer();
@@ -58,7 +58,7 @@ namespace DiscordLOLader.MainCore
             BlockMediaButtons();
             MediaTimer.Start();
             await Task.Run(() => MediaSend.PrepareMedia(MediaPath).Wait());
-            MediaSourse = MediaSend.GetMediaThumb();
+            MediaSourse = ThumbCreator.GetMediaThumb(ConvertedFile.ThumbFile, MediaSend.FileExtension);
             ShowFileData();
             UnlockMediaButtons();
         }
@@ -68,8 +68,6 @@ namespace DiscordLOLader.MainCore
             MediaOriginalSize = MediaSend.FileSize.ToString() + " byte";
             MediaNewSize = ConvertedFile.FileSize.ToString() + " byte";
         }
-
-
 
         private Visibility _WaitMediaLabel;
         public Visibility WaitMediaLabel

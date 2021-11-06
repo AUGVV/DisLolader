@@ -12,7 +12,8 @@ namespace DiscordLOLader.Functions
         {
             Image,
             Media,
-            Sound,
+            SoundMp3,
+            SoundWav,
             None
         }
         
@@ -42,9 +43,13 @@ namespace DiscordLOLader.Functions
             {
                 WebmExtension();
             }
-            else if (FileType == FileType.Sound)
+            else if (FileType == FileType.SoundMp3)
             {
                 Mp3Extension();
+            }
+            else if (FileType == FileType.SoundWav)
+            {
+                WavExtension();
             }
             else if (FileType == FileType.None)
             {
@@ -52,11 +57,11 @@ namespace DiscordLOLader.Functions
             }
         }
 
-        private void PngExtension()
-        {
+         private void PngExtension()
+         {
             FileExtension = ".png";
             GetFullPath(FileExtension);
-        }
+         }
 
         private void WebmExtension()
         {
@@ -67,6 +72,12 @@ namespace DiscordLOLader.Functions
         private void Mp3Extension()
         {
             FileExtension = ".mp3";
+            GetFullPath(FileExtension);
+        }
+
+        private void WavExtension()
+        {
+            FileExtension = ".wav";
             GetFullPath(FileExtension);
         }
 

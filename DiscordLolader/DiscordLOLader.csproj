@@ -20,8 +20,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Functions\AudioCompress.cs~RF899deb.TMP" />
     <None Remove="Resources\Imager.png" />
     <None Remove="Resources\Mp3Thumb.png" />
+    <None Remove="Resources\WavThumb.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bin\Debug\netcoreapp3.1\cache\WavThumb.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,6 +49,9 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Title.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\WavThumb.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

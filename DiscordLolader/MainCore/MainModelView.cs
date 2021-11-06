@@ -24,13 +24,14 @@ namespace DiscordLOLader.MainCore
         private bool isChannelSelected = false;     
         private BotControl BotsControl;
         private ConvertedFile ConvertedFile;
-
+        private ThumbCreator ThumbCreator;
 
         public MainModelView(BotCore BotRecieved)
         {
             BotCore = BotRecieved;
             BotsControl = new BotControl(BotCore);
             ConvertedFile = new ConvertedFile();
+            ThumbCreator = new ThumbCreator();
             InitMediaPartial();
             InitEmbedPartial();
             InitPicturePartial();

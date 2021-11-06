@@ -13,16 +13,18 @@ namespace DiscordLOLader.Bot
     {
         BotCore Bot;
         private ConvertedFile ConvertedFile;
+        private ThumbCreator ThumbCreator;
 
         DiscordMessageBuilder Builder;
         
         public delegate void Handler(bool button);
         public event Handler MessageCompleted;
 
-        public PictureSend(BotCore Bot, ConvertedFile ConvertedFile)
+        public PictureSend(BotCore Bot, ConvertedFile ConvertedFile, ThumbCreator ThumbCreator)
         {
             this.Bot = Bot;
             this.ConvertedFile = ConvertedFile;
+            this.ThumbCreator = ThumbCreator;
             Builder = new DiscordMessageBuilder();      
         }
 
@@ -30,7 +32,7 @@ namespace DiscordLOLader.Bot
         {
             FileInitialization(Path);
 
-            const double Lock = 8000000; 
+            const double Lock = 8388608; 
 
             if (FileSize > Lock)
             {

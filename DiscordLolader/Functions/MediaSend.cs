@@ -1,4 +1,5 @@
-﻿using DSharpPlus.Entities;
+﻿using DiscordLOLader.Functions;
+using DSharpPlus.Entities;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -7,62 +8,53 @@ using System.Windows.Media.Imaging;
 
 namespace DiscordLOLader.Bot
 {
-    class MediaSend
+    class MediaSend : FileToConvert
     {
-        public long CurrentSize { get; private set; } = 0;
-        public long NewSize { get; private set; } = 0;
-
-
         private BotCore Bot;
+        private ConvertedFile ConvertedFile;
         private DiscordMessageBuilder Builder;
 
         public delegate void Handler(bool button);
         public event Handler MediaSendingCompleted;
 
-        private readonly string CacheFile = $@"{Environment.CurrentDirectory}\Cache\Download";
-        private readonly string ThumbFile = $@"{Environment.CurrentDirectory}\Cache\Thumb.png";
-        private string OldPath = "";
-        private string CurrentFormat = "";
+        private const double Lock = 8000000;
 
-        private const double Lock = 800000000;
-        private string PathToSendFile = "";
-
-        public MediaSend(BotCore BotRecieved)
+        public MediaSend(BotCore Bot, ConvertedFile ConvertedFile)
         {
-            Bot = BotRecieved;
+            this.Bot = Bot;
+            this.ConvertedFile = ConvertedFile;
             Builder = new DiscordMessageBuilder();
         }
 
         public Task PrepareMedia(string Path)
         {
-            GetFileData(Path);
-            OldPath = Path;
-            if (CurrentSize > Lock)
+            FileInitialization(Path);
+            if (FileSize > Lock)
             {
-                if (CurrentFormat.ToLower() == ".mp3")
+                if (FileExtension == ".mp3" || FileExtension == ".wav")
                 {
-                    CreateThumbImage(Path);
-                    Mp3Compress(Path, CacheFile);
-                    if (GetSize(CacheFile + CurrentFormat) > Lock)
+                    ConvertedFile.ConvertedFileInitialization(ConvertedFile.FileType.Sound);
+                    CreateThumbImage(FilePath);
+                    Mp3Compress(FilePath, ConvertedFile.FilePath);
+                    ConvertedFile.GetSize();
+                    if (ConvertedFile.FileSize > Lock)
                     {
-                        Mp3Compress(Path, CacheFile, "9");
+                        Mp3Compress(Path, ConvertedFile.FilePath, "9");
                     }
-                    PathToSendFile = $"{CacheFile}{CurrentFormat}";
-                    NewSize = GetSize($"{CacheFile}{CurrentFormat}");
                 }
-                else if (CurrentFormat.ToLower() == ".webm" || CurrentFormat.ToLower() == ".mp4")
+                else if (FileExtension == ".webm" || FileExtension == ".mp4")
                 {
-                    CreateThumbImage(Path);
-                    WebmCompress(Path, CacheFile);
-                    PathToSendFile = $"{CacheFile}.webm";
-                    NewSize = GetSize($"{CacheFile}.webm");
+                    ConvertedFile.ConvertedFileInitialization(ConvertedFile.FileType.Media);
+                    CreateThumbImage(FilePath);
+                    WebmCompress(FilePath, ConvertedFile.FilePath);
+                    ConvertedFile.GetSize();
                 }
             }
             else
             {
-                CreateThumbImage(Path);
-                PathToSendFile = Path;
-                CurrentSize = NewSize = GetSize(PathToSendFile);
+                ConvertedFile.ConvertedFileInitialization(ConvertedFile.FileType.None, FilePath);
+                ConvertedFile.GetSize();
+                CreateThumbImage(FilePath);
             }
             return Task.CompletedTask;
         }
@@ -71,7 +63,7 @@ namespace DiscordLOLader.Bot
         {
             BitmapImage Bitmap = new BitmapImage();
             Bitmap.BeginInit();
-            Bitmap.UriSource = File.Exists(ThumbFile) && CurrentFormat.ToLower() != ".mp3" ? new Uri(ThumbFile) : new Uri(@"pack://application:,,,/Resources/Mp3Thumb.png");
+            Bitmap.UriSource = File.Exists(ConvertedFile.ThumbFile) && (FileExtension != ".mp3" || FileExtension == ".wav") ? new Uri(ConvertedFile.ThumbFile) : new Uri(@"pack://application:,,,/Resources/Mp3Thumb.png");
             Bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
             Bitmap.CacheOption = BitmapCacheOption.OnLoad;
             Bitmap.EndInit();
@@ -83,7 +75,7 @@ namespace DiscordLOLader.Bot
             ProcessStartInfo Video_config = new ProcessStartInfo
             {
                 FileName = "ffmpeg.exe",
-                Arguments = $@"-ss 5 -y -i {Path} -vframes 1 -s 320x240 -f image2 {ThumbFile}",
+                Arguments = $@"-ss 5 -y -i {Path} -vframes 1 -s 320x240 -f image2 {ConvertedFile.ThumbFile}",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 CreateNoWindow = true
@@ -92,20 +84,13 @@ namespace DiscordLOLader.Bot
             Input.WaitForExit();
         }
 
-        private void GetFileData(string path)
-        {      
-                CurrentFormat = GetFormat(path);
-                CurrentSize = GetSize(path);
-        }
-
-
         FileStream FileReader; 
         public void MediaFileSend(ulong channelid)
         {
-            if (PathToSendFile != "" || !File.Exists(PathToSendFile))
+            if (ConvertedFile.FilePath != "" || !File.Exists(ConvertedFile.FilePath))
             {
-                FileReader = File.OpenRead(PathToSendFile);
-                _ = Builder.WithFile(GetFileName(OldPath), FileReader);
+                FileReader = File.OpenRead(ConvertedFile.FilePath);
+                _ = Builder.WithFile(GetFileName(FileName), FileReader);;
                 _ = Bot.ConnectedGuild.GetChannel(channelid).SendMessageAsync(Builder).ContinueWith(OnEvent);
                 Builder.Clear();
             }
@@ -116,7 +101,7 @@ namespace DiscordLOLader.Bot
             ProcessStartInfo Video_config = new ProcessStartInfo
             {
                 FileName = "ffmpeg.exe",
-                Arguments = $@"-i {Path} -y -c:v libvpx-vp9 -quality realtime -speed 15 -b:v 150K -maxrate 150K  -s 401x255 -r 22 -crf 4 -c:a libopus -b:a 96k {CacheFile}.webm",
+                Arguments = $@"-i {FilePath} -y -c:v libvpx-vp9 -quality realtime -speed 15 -b:v 150K -maxrate 150K  -s 401x255 -r 22 -crf 4 -c:a libopus -b:a 96k {ConvertedFile.FilePath}",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 CreateNoWindow = true
@@ -130,19 +115,13 @@ namespace DiscordLOLader.Bot
             ProcessStartInfo Music_config = new ProcessStartInfo
             {
                 FileName = "ffmpeg.exe",
-                Arguments = $@"-i {Path} -y -vn -q:a {BitRate} -codec:a libmp3lame {CacheFile}.mp3",
+                Arguments = $@"-i {FilePath} -y -vn -q:a {BitRate} -codec:a libmp3lame {ConvertedFile.FilePath}",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
-                CreateNoWindow = true
+                CreateNoWindow = false
             };
             Process Input = Process.Start(Music_config);
             Input.WaitForExit();
-        }
-
-        private long GetSize(string path)
-        {
-            FileInfo file = new FileInfo(path);
-            return file.Length * 100;
         }
 
         private string GetFileName(string path)

@@ -85,7 +85,7 @@ namespace DiscordLOLader
             string[] Check = folderPath[0].Split(@".");
             if (folderPath[0] != TxtBox.Text)
             {
-                if (Check[Check.Length - 1].ToLower() == "webm" || Check[Check.Length - 1].ToLower() == "mp4" || Check[Check.Length - 1].ToLower() == "mp3")
+                if (Check[Check.Length - 1].ToLower() == "webm" || Check[Check.Length - 1].ToLower() == "mp4" || Check[Check.Length - 1].ToLower() == "mp3" || Check[Check.Length - 1].ToLower() == "wav")
                 {
                     TextVidAudBox.Text = folderPath[0];
                 }

@@ -31,7 +31,7 @@ namespace DiscordLOLader.MainCore
             PictureTimer.Tick += PictureBarIncrement;
             PictureTimer.Interval = new TimeSpan(0, 0, 1);
 
-            PictureSend = new PictureSend(BotCore);
+            PictureSend = new PictureSend(BotCore, ConvertedFile);
             PictureSouse = (BitmapImage)Bitmap(new Uri(@"pack://application:,,,/Resources/Imager.png"));
             ImageDragDrop = true;
             WaitImageLabel = Visibility.Hidden;
@@ -69,8 +69,8 @@ namespace DiscordLOLader.MainCore
 
         private void GetPictureData()
         {
-            OriginalSizeLabel = PictureSend.OriginalSize.ToString();
-            ResultSizeLabel = PictureSend.ResultSize.ToString();
+            OriginalSizeLabel = PictureSend.FileSize.ToString();
+            ResultSizeLabel = ConvertedFile.FileSize.ToString();
         }
 
 

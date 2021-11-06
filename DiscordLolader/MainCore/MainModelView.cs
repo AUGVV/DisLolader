@@ -23,12 +23,14 @@ namespace DiscordLOLader.MainCore
         private BotCore BotCore;
         private bool isChannelSelected = false;     
         private BotControl BotsControl;
+        private ConvertedFile ConvertedFile;
 
 
         public MainModelView(BotCore BotRecieved)
         {
             BotCore = BotRecieved;
             BotsControl = new BotControl(BotCore);
+            ConvertedFile = new ConvertedFile();
             InitMediaPartial();
             InitEmbedPartial();
             InitPicturePartial();

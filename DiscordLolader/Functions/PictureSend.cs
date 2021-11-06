@@ -1,4 +1,5 @@
-﻿using DSharpPlus.Entities;
+﻿using DiscordLOLader.Functions;
+using DSharpPlus.Entities;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -8,45 +9,42 @@ using System.Windows.Media.Imaging;
 
 namespace DiscordLOLader.Bot
 {
-    class PictureSend
+    class PictureSend : FileToConvert
     {
         BotCore Bot;
-    
-        DiscordMessageBuilder Builder;
+        private ConvertedFile ConvertedFile;
 
+        DiscordMessageBuilder Builder;
+        
         public delegate void Handler(bool button);
         public event Handler MessageCompleted;
 
-
-        private readonly string CacheFile = $@"{Environment.CurrentDirectory}\Cache\PictureDownload.png";
-        private readonly string ThumbFile = $@"{Environment.CurrentDirectory}\Cache\PictureThumb.png";
-        private string PathToSendFile = "";
-
-        public long OriginalSize { get; private set; }
-        public long ResultSize { get; private set; }
-
-        public PictureSend(BotCore BotRecieved)
+        public PictureSend(BotCore Bot, ConvertedFile ConvertedFile)
         {
-            Bot = BotRecieved;
+            this.Bot = Bot;
+            this.ConvertedFile = ConvertedFile;
             Builder = new DiscordMessageBuilder();      
         }
 
         public Task PrepareImage(string Path)
         {
-            const double Lock = 800000000; 
-            OriginalSize = GetSize(Path);
+            FileInitialization(Path);
 
-            if (OriginalSize > Lock)
+            const double Lock = 8000000; 
+
+            if (FileSize > Lock)
             {
+                ConvertedFile.ConvertedFileInitialization(ConvertedFile.FileType.Image);
+
                 BitmapImage Bitmap = new BitmapImage();
 
                 Bitmap.BeginInit();
-                Bitmap.UriSource = new Uri(Path);
+                Bitmap.UriSource = new Uri(FilePath);
                 Bitmap.CacheOption = BitmapCacheOption.None;
                 Bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
                 Bitmap.EndInit();
 
-                double TargetPercent = 100 - (Lock / Convert.ToDouble(OriginalSize) * 100);
+                double TargetPercent = 100 - (Lock / Convert.ToDouble(FileSize)*100);
                 int PixWidth = Bitmap.PixelWidth;
                 int PixHeight = Bitmap.PixelHeight;
                 double PixWidthPercent = PixWidth * TargetPercent / 100;
@@ -57,7 +55,7 @@ namespace DiscordLOLader.Bot
                 BitmapImage BitmapOutput = new BitmapImage();
     
                 BitmapOutput.BeginInit();
-                BitmapOutput.UriSource = new Uri(Path);
+                BitmapOutput.UriSource = new Uri(FilePath);
                 BitmapOutput.DecodePixelHeight = TargetHeight;
                 BitmapOutput.DecodePixelWidth = TargetWidth;
                 BitmapOutput.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
@@ -67,21 +65,17 @@ namespace DiscordLOLader.Bot
                 BitmapEncoder Encoder = new PngBitmapEncoder();
                 Encoder.Frames.Add(BitmapFrame.Create(BitmapOutput));
 
-                    using (FileStream fileStream = new FileStream(CacheFile, FileMode.Create))
+                    using (FileStream fileStream = new FileStream(ConvertedFile.FilePath, FileMode.Create))
                     {
                         Encoder.Save(fileStream);
                         fileStream.Close();
                     }
-       
- 
-                
-                ResultSize = GetSize(CacheFile);
-                PathToSendFile = CacheFile;
+                ConvertedFile.GetSize();
             }
             else
             {
-                ResultSize = OriginalSize;
-                PathToSendFile = Path;
+                ConvertedFile.ConvertedFileInitialization(ConvertedFile.FileType.None, FilePath);
+                ConvertedFile.GetSize();
             }
             CreateThumbPicture(Path);
             return Task.CompletedTask;
@@ -101,7 +95,7 @@ namespace DiscordLOLader.Bot
 
             BitmapEncoder EncoderTemp = new PngBitmapEncoder();
             EncoderTemp.Frames.Add(BitmapFrame.Create(BitmapTemp));
-            using FileStream ThumbStream = new FileStream(ThumbFile, FileMode.Create);
+            using FileStream ThumbStream = new FileStream(ConvertedFile.ThumbFile, FileMode.Create);
             EncoderTemp.Save(ThumbStream);
         }
 
@@ -109,23 +103,18 @@ namespace DiscordLOLader.Bot
         {
             BitmapImage Bitmap = new BitmapImage();
             Bitmap.BeginInit();
-            Bitmap.UriSource = File.Exists(ThumbFile) ? new Uri(ThumbFile) : new Uri(@"pack://application:,,,/Resources/Imager.png");
+            Bitmap.UriSource = File.Exists(ConvertedFile.ThumbFile) ? new Uri(ConvertedFile.ThumbFile) : new Uri(@"pack://application:,,,/Resources/Imager.png");
             Bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
             Bitmap.CacheOption = BitmapCacheOption.OnLoad;
             Bitmap.EndInit();
             return Bitmap;
         }
 
-        private long GetSize(string path)
-        {
-            FileInfo file = new FileInfo(path);
-            return file.Length * 100;
-        }
 
         FileStream FileReader;
         public void RecieveImage(ulong channelid)
         {
-             FileReader = File.OpenRead(PathToSendFile);
+             FileReader = File.OpenRead(ConvertedFile.FilePath);
              Builder.WithFile(FileReader);   
              Bot.ConnectedGuild.GetChannel(channelid).SendMessageAsync(Builder).ContinueWith(OnEvent);
              Builder.Clear();

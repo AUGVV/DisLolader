@@ -19,7 +19,7 @@ namespace DiscordLOLader.MainCore
         private MediaSend MediaSend;
         private void InitMediaPartial()
         {
-            MediaSend = new MediaSend(BotCore);
+            MediaSend = new MediaSend(BotCore, ConvertedFile);
             MediaSourse = (BitmapImage)Bitmap(new Uri(@"pack://application:,,,/Resources/Imager.png"));
 
             MediaTimer = new System.Windows.Threading.DispatcherTimer();
@@ -65,8 +65,8 @@ namespace DiscordLOLader.MainCore
 
         private void ShowFileData()
         {
-            MediaOriginalSize = MediaSend.CurrentSize.ToString() + " byte";
-            MediaNewSize = MediaSend.NewSize.ToString() + " byte";
+            MediaOriginalSize = MediaSend.FileSize.ToString() + " byte";
+            MediaNewSize = ConvertedFile.FileSize.ToString() + " byte";
         }
 
 

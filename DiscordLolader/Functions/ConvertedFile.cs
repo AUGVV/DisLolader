@@ -84,7 +84,6 @@ namespace DiscordLOLader.Functions
         private void GetFullPath(string FileExtension)
         {
             FilePath = $"{CacheFile}{FileExtension}";
-            Debug.WriteLine(FilePath);
         }
     }
 }

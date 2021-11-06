@@ -19,7 +19,6 @@ namespace DiscordLOLader.Functions
         protected internal void FileInitialization(string Path)
         {
             FileInfo File = new FileInfo(Path);
-            Debug.WriteLine(File.Attributes);
             FilePath = File.FullName;
             FileSize = File.Length;
             FileName = File.Name;

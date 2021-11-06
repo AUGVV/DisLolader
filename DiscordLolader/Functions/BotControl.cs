@@ -17,10 +17,6 @@ namespace DiscordLOLader.Functions
             this.Bot = Bot;
         }
             
-
-
-
-
         public void ChangeState(string State)
         {
             if(State == "В сети")

@@ -36,9 +36,6 @@ namespace DiscordLOLader.Functions
 
         private Uri GetThumbSource(string ThumbPath, string FileExtension)
         {
-            Debug.WriteLine(FileExtension);
-            if(File.Exists(ThumbPath))
-            {
                 if (FileExtension == ".mp3")
                 {
                     return new Uri(@"pack://application:,,,/Resources/Mp3Thumb.png");
@@ -49,9 +46,11 @@ namespace DiscordLOLader.Functions
                 }
                 else
                 {
-                    return new Uri(ThumbPath);
+                  if (File.Exists(ThumbPath))
+                  {
+                          return new Uri(ThumbPath);
+                  }
                 }
-            }
             return new Uri(@"pack://application:,,,/Resources/Mp3Thumb.png");
         }
     }

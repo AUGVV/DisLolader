@@ -40,7 +40,6 @@ namespace DiscordLOLader.Bot
                 if (FileExtension == ".mp3" || FileExtension == ".wav")
                 {
                     InitAudio();
-                    ThumbCreator.CreateThumbMedia(FilePath, ConvertedFile.ThumbFile);
                     AudioCompress.Mp3Compress(FilePath, ConvertedFile.FilePath);
                     ConvertedFile.GetSize();
                 }

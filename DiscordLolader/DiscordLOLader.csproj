@@ -7,6 +7,13 @@
     <ApplicationIcon>BotIco.ico</ApplicationIcon>
     <Authors>0000000$</Authors>
     <Copyright>0000000$</Copyright>
+    <PackageId>DiscordLoader</PackageId>
+    <Product>DiscordLoader</Product>
+    <AssemblyName>DiscordLoader</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -17,6 +24,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <PlatformTarget>x64</PlatformTarget>
     <Optimize>true</Optimize>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
 
   <ItemGroup>

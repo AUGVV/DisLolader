@@ -6,13 +6,13 @@
         xmlns:local="clr-namespace:DiscordLOLader" xmlns:autorizationcore="clr-namespace:DiscordLOLader.AutorizationCore"  xmlns:i="clr-namespace:Microsoft.VisualBasic;assembly=Microsoft.VisualBasic.Core" d:DataContext="{d:DesignInstance Type=autorizationcore:AutorizationViewModel}"
         mc:Ignorable="d"
         Title="Autorization" Height="274" Width="408" ResizeMode="NoResize" WindowStyle="None" Background="#FF36393F" WindowStartupLocation="CenterScreen" MouseLeftButtonDown="Window_MouseLeftButtonDown">
-    
-   
+
+
 
     <Grid>
         <Image HorizontalAlignment="Left" Height="55" Margin="10,10,0,0" VerticalAlignment="Top" Width="55" StretchDirection="UpOnly" Stretch="None" SnapsToDevicePixels="True" Source="/Resources/Discord.png"/>
         <Border BorderThickness="6,6,6,6" BorderBrush="#FF202225"/>
-        <Label Content="DISCORD LOLader" HorizontalAlignment="Left" Margin="70,12,0,0" VerticalAlignment="Top" Foreground="White" Height="53" Width="306" FontFamily="Bahnschrift" FontSize="36"/>
+        <Label Content="Discord Loader v1" HorizontalAlignment="Left" Margin="81,12,0,0" VerticalAlignment="Top" Foreground="White" Height="53" Width="306" FontFamily="Bahnschrift" FontSize="36"/>
         <TextBox x:Name="TokenBox" HorizontalAlignment="Center" Margin="0,92,0,0" VerticalAlignment="Top" Width="372" FontSize="20" SelectionTextBrush="White" Background="#FF40444B" BorderBrush="#FF40444B" Foreground="White" SelectionBrush="#FF40444B" FontFamily="Bahnschrift SemiLight" Text="{Binding Token, UpdateSourceTrigger=PropertyChanged}"/>
         <CheckBox Content="Remember" HorizontalAlignment="Left" Margin="18,163,0,0" VerticalAlignment="Top" Foreground="White" IsChecked="{Binding Checked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Button Command="{Binding Path=LogIn}" Content="LOG IN" HorizontalAlignment="Center" Margin="0,198,0,0" VerticalAlignment="Top" Height="57" Width="371" Background="#FF4C5059" BorderBrush="#FF4C5059" Foreground="White" IsEnabled="{Binding LoginEnable}"/>
@@ -21,6 +21,6 @@
         <Label x:Name="LoginHelper_Copy" Content="Channel id" HorizontalAlignment="Left" Margin="18,123,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="#FF999999" FontSize="18" Height="36" IsHitTestVisible="False" IsEnabled="False" BorderThickness="0,0,0,0" Visibility="{Binding ChannelText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
         <Label x:Name="LabelError" Content="Token or channel is wrong" HorizontalAlignment="Left" Margin="189,159,0,0" VerticalAlignment="Top" Background="{x:Null}" Foreground="Red" FontFamily="Bahnschrift" FontSize="16" Visibility="{Binding ErrorLabel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Button x:Name="CloseButton" Command="{Binding Path=Close}" Content="X" HorizontalAlignment="Left" Margin="381,7,0,0" VerticalAlignment="Top" Foreground="White" BorderBrush="#FF2B2B2B" Background="#FF2B2B2B" Height="20" Width="20" FontFamily="Bahnschrift"/>
-      
+
     </Grid>
 </Window>

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "DiscordLOLader": {
+      "commandName": "Project",
+      "sqlDebugging": false,
+      "nativeDebugging": false,
+      "jsWebView2Debugging": false
+    }
+  }
+}

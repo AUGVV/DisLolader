@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 
 namespace DiscordLOLader.Functions
 {
@@ -25,15 +23,15 @@ namespace DiscordLOLader.Functions
 
         private void CompressFile(string CacheFile)
         {
-            ProcessStartInfo Video_config = new ProcessStartInfo
+            ProcessStartInfo VideoConfig = new ProcessStartInfo
             {
                 FileName = "ffmpeg.exe",
                 Arguments = $@"-i {FilePath} -y -c:v libvpx -quality realtime -speed 15 -minrate {FileBitrate}K -b:v {FileBitrate}K -maxrate {FileBitrate}K -bufsize 75K -s {MediaWidth}x{MediaHeight} -r 22 -crf 4 -c:a libopus -b:a 64K -vbr:a off {CacheFile}",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
-                CreateNoWindow = false
+                CreateNoWindow = true
             };
-            Process Input = Process.Start(Video_config);
+            Process Input = Process.Start(VideoConfig);
             Input.WaitForExit();
         }
 
@@ -46,7 +44,7 @@ namespace DiscordLOLader.Functions
         private string Duration;
         private void InitializationMediaInfo()
         {
-            ProcessStartInfo AudioInfo = new ProcessStartInfo
+            ProcessStartInfo VideoInfo = new ProcessStartInfo
             {
                 FileName = "ffmpeg.exe",
                 Arguments = $@"-i {FilePath}",
@@ -54,7 +52,7 @@ namespace DiscordLOLader.Functions
                 RedirectStandardError = true,
                 CreateNoWindow = true
             };
-            Process Input = Process.Start(AudioInfo);
+            Process Input = Process.Start(VideoInfo);
             Duration = Input.StandardError.ReadToEnd();
             Input.WaitForExit();
             GetDuration();

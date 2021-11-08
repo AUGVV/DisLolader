@@ -10,16 +10,23 @@ namespace DiscordLOLader.Functions
     {
         public void CreateThumbMedia(string FilePath, string PathTo)
         {
-            ProcessStartInfo Video_config = new ProcessStartInfo
+            try
             {
-                FileName = "ffmpeg.exe",
-                Arguments = $@"-ss 5 -y -i {FilePath} -vframes 1 -s 320x240 -f image2 {PathTo}",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
-            };
-            Process Input = Process.Start(Video_config);
-            Input.WaitForExit();
+                ProcessStartInfo VideoConfig = new ProcessStartInfo
+                {
+                    FileName = "ffmpeg.exe",
+                    Arguments = $@"-ss 5 -y -i {FilePath} -vframes 1 -s 320x240 -f image2 {PathTo}",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                };
+                Process Input = Process.Start(VideoConfig);
+                Input.WaitForExit();
+            }
+            catch
+            {
+                CreateThumbPicture("pack://application:,,,/Resources/Mp3Thumb.png", PathTo);
+            }
         }
 
         public void CreateThumbPicture(string Path, string PathTo)

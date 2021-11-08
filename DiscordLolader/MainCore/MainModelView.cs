@@ -112,7 +112,7 @@ namespace DiscordLOLader.MainCore
         public RelayCommand Close => _Close ?? (_Close = new RelayCommand(obj => { BotCore.CloseConnection(); Environment.Exit(0); }));
 
         private RelayCommand _RestartApp;
-        public RelayCommand RestartApp => _RestartApp ?? (_RestartApp = new RelayCommand(obj => { _ = Process.Start(@$"{Environment.CurrentDirectory}\DiscordLOLader.exe"); Environment.Exit(0); }));
+        public RelayCommand RestartApp => _RestartApp ?? (_RestartApp = new RelayCommand(obj => { _ = Process.Start(@$"{Environment.CurrentDirectory}\{AppDomain.CurrentDomain.FriendlyName}.exe"); Environment.Exit(0); }));
 
         private RelayCommand _Turn;
         public RelayCommand Turn

@@ -18,9 +18,13 @@ namespace DiscordLOLader.Functions
         {
             this.FilePath = FilePath;
 
-            InitializationMediaInfo();
-          
+            InitializationMediaInfo();       
             FileBitrate = SetBitrate();
+            CompressFile(CacheFile);
+        }
+
+        private void CompressFile(string CacheFile)
+        {
             ProcessStartInfo Video_config = new ProcessStartInfo
             {
                 FileName = "ffmpeg.exe",
@@ -32,7 +36,6 @@ namespace DiscordLOLader.Functions
             Process Input = Process.Start(Video_config);
             Input.WaitForExit();
         }
-
 
         private string SetBitrate()
         {

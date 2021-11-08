@@ -1,10 +1,7 @@
 ﻿using DiscordLOLader.Bot;
 using DiscordLOLader.Functions;
 using DiscordLOLader.MVVM;
-using DiscordLOLader.Properties;
-using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -18,7 +15,6 @@ namespace DiscordLOLader.MainCore
     public partial class MainModelView : INotifyPropertyChanged
     {
         public ObservableCollection<Channel> Chan { get; set; }
-
 
         private BotCore BotCore;
         private bool isChannelSelected = false;     
@@ -68,7 +64,6 @@ namespace DiscordLOLader.MainCore
                 {
                     ButtonImageWork = true;
                 }
-                Debug.WriteLine(_MediaPath);
                 if (_MediaPath != null && !isMediaSending)
                 {
                     MediaSendButtonWork = true;

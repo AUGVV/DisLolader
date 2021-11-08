@@ -2,13 +2,9 @@
 using DiscordLOLader.MVVM;
 using DiscordLOLader.settings;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Security;
-using System.Text;
-using System.Windows.Input;
 
 namespace DiscordLOLader.AutorizationCore
 {
@@ -58,7 +54,6 @@ namespace DiscordLOLader.AutorizationCore
             }
         }
 
-
         private bool _loginEnable;
         public bool LoginEnable
         {
@@ -70,7 +65,6 @@ namespace DiscordLOLader.AutorizationCore
                 OnPropertyChanged("LoginEnable");
             }
         }
-
 
         private bool _checked;
         public bool Checked
@@ -154,9 +148,6 @@ namespace DiscordLOLader.AutorizationCore
             }
         }
 
-   
-
-
         private System.Windows.Visibility _botToken;
         public System.Windows.Visibility BotToken
         {
@@ -167,7 +158,6 @@ namespace DiscordLOLader.AutorizationCore
                 OnPropertyChanged("BotToken");
             }
         }
-
 
         public void TryLogin()
         {
@@ -190,7 +180,6 @@ namespace DiscordLOLader.AutorizationCore
            }
             _loginEnable = true;
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")

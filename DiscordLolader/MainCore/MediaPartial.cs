@@ -58,7 +58,7 @@ namespace DiscordLOLader.MainCore
             BlockMediaButtons();
             MediaTimer.Start();
             await Task.Run(() => MediaSend.PrepareMedia(MediaPath).Wait());
-            MediaSourse = ThumbCreator.GetMediaThumb(ConvertedFile.ThumbFile, MediaSend.FileExtension);
+            MediaSourse = ThumbCreator.GetThumb(ConvertedFile.ThumbFile, MediaSend.FileExtension);
             ShowFileData();
             UnlockMediaButtons();
         }
@@ -76,16 +76,12 @@ namespace DiscordLOLader.MainCore
             set { _WaitMediaLabel = value; OnPropertyChanged("WaitMediaLabel"); }
         }
 
-
-
         private bool _MediaDragDrop = true;
         public bool MediaDragDrop
         {
             get => _MediaDragDrop;
             set { _MediaDragDrop = value; OnPropertyChanged("MediaDragDrop"); }
         }
-
-
 
         private bool _MediaSendButtonWork = false;
         public bool MediaSendButtonWork
@@ -142,10 +138,6 @@ namespace DiscordLOLader.MainCore
             MediaProgress++;
         }
 
-
-
-
-
         private bool _MediaOpenButtonWork = true;
         public bool MediaOpenButtonWork
         {
@@ -165,10 +157,6 @@ namespace DiscordLOLader.MainCore
             };
             return dialog.ShowDialog() == true ? dialog.FileName : "";
         }
-
-
-
-
 
         private ImageSource _MediaSourse;
         public ImageSource MediaSourse

@@ -1,9 +1,7 @@
 ﻿using DiscordLOLader.Functions;
 using DSharpPlus.Entities;
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
@@ -11,14 +9,15 @@ namespace DiscordLOLader.Bot
 {
     class PictureSend : FileToConvert
     {
-        BotCore Bot;
+        private BotCore Bot;
         private ConvertedFile ConvertedFile;
         private ThumbCreator ThumbCreator;
-
-        DiscordMessageBuilder Builder;
+        private DiscordMessageBuilder Builder;
         
         public delegate void Handler(bool button);
         public event Handler MessageCompleted;
+
+        private const double Lock = 8388608;
 
         public PictureSend(BotCore Bot, ConvertedFile ConvertedFile, ThumbCreator ThumbCreator)
         {
@@ -32,46 +31,13 @@ namespace DiscordLOLader.Bot
         {
             FileInitialization(Path);
 
-            const double Lock = 8388608; 
-
             if (FileSize > Lock)
             {
                 ConvertedFile.ConvertedFileInitialization(ConvertedFile.FileType.Image);
-
-                BitmapImage Bitmap = new BitmapImage();
-
-                Bitmap.BeginInit();
-                Bitmap.UriSource = new Uri(FilePath);
-                Bitmap.CacheOption = BitmapCacheOption.None;
-                Bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-                Bitmap.EndInit();
-
-                double TargetPercent = 100 - (Lock / Convert.ToDouble(FileSize)*100);
-                int PixWidth = Bitmap.PixelWidth;
-                int PixHeight = Bitmap.PixelHeight;
-                double PixWidthPercent = PixWidth * TargetPercent / 100;
-                double PixHeightPercent = PixHeight * TargetPercent / 100;
-                int TargetWidth = PixWidth - (int)PixWidthPercent;
-                int TargetHeight = PixHeight - (int)PixHeightPercent;
-
-                BitmapImage BitmapOutput = new BitmapImage();
-    
-                BitmapOutput.BeginInit();
-                BitmapOutput.UriSource = new Uri(FilePath);
-                BitmapOutput.DecodePixelHeight = TargetHeight;
-                BitmapOutput.DecodePixelWidth = TargetWidth;
-                BitmapOutput.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-                BitmapOutput.CacheOption = BitmapCacheOption.None;
-                BitmapOutput.EndInit();
-
+                BitmapImage Bitmap = GetImage();
                 BitmapEncoder Encoder = new PngBitmapEncoder();
-                Encoder.Frames.Add(BitmapFrame.Create(BitmapOutput));
-
-                    using (FileStream fileStream = new FileStream(ConvertedFile.FilePath, FileMode.Create))
-                    {
-                        Encoder.Save(fileStream);
-                        fileStream.Close();
-                    }
+                Encoder.Frames.Add(BitmapFrame.Create(CompressedImage(GetTargetWidth(Bitmap), GetTargetHeight(Bitmap))));
+                SaveCompressedFile(Encoder);
                 ConvertedFile.GetSize();
             }
             else
@@ -79,39 +45,61 @@ namespace DiscordLOLader.Bot
                 ConvertedFile.ConvertedFileInitialization(ConvertedFile.FileType.None, FilePath);
                 ConvertedFile.GetSize();
             }
-            CreateThumbPicture(Path);
+            ThumbCreator.CreateThumbPicture(Path, ConvertedFile.ThumbFile);
             return Task.CompletedTask;
         }
 
-        void CreateThumbPicture(string Path)
+        private void SaveCompressedFile(BitmapEncoder Encoder)
         {
-            BitmapImage BitmapTemp = new BitmapImage();
-
-            BitmapTemp.BeginInit();
-            BitmapTemp.UriSource = new Uri(Path);
-            BitmapTemp.DecodePixelHeight = 100;
-            BitmapTemp.DecodePixelWidth = 100;
-            BitmapTemp.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-            BitmapTemp.CacheOption = BitmapCacheOption.None;
-            BitmapTemp.EndInit();
-
-            BitmapEncoder EncoderTemp = new PngBitmapEncoder();
-            EncoderTemp.Frames.Add(BitmapFrame.Create(BitmapTemp));
-            using FileStream ThumbStream = new FileStream(ConvertedFile.ThumbFile, FileMode.Create);
-            EncoderTemp.Save(ThumbStream);
+            using (FileStream fileStream = new FileStream(ConvertedFile.FilePath, FileMode.Create))
+            {
+                Encoder.Save(fileStream);
+                fileStream.Close();
+            }
         }
 
-        public System.Windows.Media.ImageSource GetPictureThumb()
+        private int GetTargetWidth(BitmapImage Bitmap)
+        {
+            int PixWidth = Bitmap.PixelWidth;
+            double PixWidthPercent = PixWidth * GetTargetPercent() / 100;
+            return PixWidth - (int)PixWidthPercent;
+        }
+
+        private int GetTargetHeight(BitmapImage Bitmap)
+        {
+            int PixHeight = Bitmap.PixelHeight;
+            double PixHeightPercent = PixHeight * GetTargetPercent() / 100;
+            return PixHeight - (int)PixHeightPercent;
+        }
+
+        private double GetTargetPercent()
+        {
+            return 100 - (Lock / Convert.ToDouble(FileSize) * 100);
+        }
+
+        private BitmapImage GetImage()
         {
             BitmapImage Bitmap = new BitmapImage();
             Bitmap.BeginInit();
-            Bitmap.UriSource = File.Exists(ConvertedFile.ThumbFile) ? new Uri(ConvertedFile.ThumbFile) : new Uri(@"pack://application:,,,/Resources/Imager.png");
+            Bitmap.UriSource = new Uri(FilePath);
+            Bitmap.CacheOption = BitmapCacheOption.None;
             Bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
-            Bitmap.CacheOption = BitmapCacheOption.OnLoad;
             Bitmap.EndInit();
             return Bitmap;
         }
 
+        private BitmapImage CompressedImage(int TargetWidth, int TargetHeight)
+        {
+            BitmapImage Bitmap = new BitmapImage();
+            Bitmap.BeginInit();
+            Bitmap.UriSource = new Uri(FilePath);
+            Bitmap.DecodePixelHeight = TargetHeight;
+            Bitmap.DecodePixelWidth = TargetWidth;
+            Bitmap.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+            Bitmap.CacheOption = BitmapCacheOption.None;
+            Bitmap.EndInit();
+            return Bitmap;
+        }
 
         FileStream FileReader;
         public void RecieveImage(ulong channelid)

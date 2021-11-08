@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace DiscordLOLader.Functions
@@ -23,7 +22,25 @@ namespace DiscordLOLader.Functions
             Input.WaitForExit();
         }
 
-        public System.Windows.Media.ImageSource GetMediaThumb(string ThumbPath, string FileExtension)
+        public void CreateThumbPicture(string Path, string PathTo)
+        {
+            BitmapImage BitmapTemp = new BitmapImage();
+
+            BitmapTemp.BeginInit();
+            BitmapTemp.UriSource = new Uri(Path);
+            BitmapTemp.DecodePixelHeight = 100;
+            BitmapTemp.DecodePixelWidth = 100;
+            BitmapTemp.CreateOptions = BitmapCreateOptions.IgnoreImageCache;
+            BitmapTemp.CacheOption = BitmapCacheOption.None;
+            BitmapTemp.EndInit();
+
+            BitmapEncoder EncoderTemp = new PngBitmapEncoder();
+            EncoderTemp.Frames.Add(BitmapFrame.Create(BitmapTemp));
+            using FileStream ThumbStream = new FileStream(PathTo, FileMode.Create);
+            EncoderTemp.Save(ThumbStream);
+        }
+
+        public ImageSource GetThumb(string ThumbPath, string FileExtension)
         {
             BitmapImage Bitmap = new BitmapImage();
             Bitmap.BeginInit();
@@ -36,21 +53,21 @@ namespace DiscordLOLader.Functions
 
         private Uri GetThumbSource(string ThumbPath, string FileExtension)
         {
-                if (FileExtension == ".mp3")
+            if (FileExtension == ".mp3")
+            {
+                return new Uri(@"pack://application:,,,/Resources/Mp3Thumb.png");
+            }
+            else if (FileExtension == ".wav")
+            {
+                return new Uri(@"pack://application:,,,/Resources/WavThumb.png");
+            }
+            else
+            {
+                if (File.Exists(ThumbPath))
                 {
-                    return new Uri(@"pack://application:,,,/Resources/Mp3Thumb.png");
+                    return new Uri(ThumbPath);
                 }
-                else if(FileExtension == ".wav")
-                {
-                    return new Uri(@"pack://application:,,,/Resources/WavThumb.png");
-                }
-                else
-                {
-                  if (File.Exists(ThumbPath))
-                  {
-                          return new Uri(ThumbPath);
-                  }
-                }
+            }
             return new Uri(@"pack://application:,,,/Resources/Mp3Thumb.png");
         }
     }

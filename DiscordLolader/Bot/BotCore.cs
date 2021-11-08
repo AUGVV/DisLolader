@@ -1,5 +1,4 @@
-﻿using DiscordLOLader.settings;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using System;
@@ -29,7 +28,6 @@ namespace DiscordLOLader.Bot
 
 
         public ObservableCollection<Channel> ChannelList = new ObservableCollection<Channel>();
-
 
         public BotCore()
         {

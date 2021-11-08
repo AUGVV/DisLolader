@@ -1,18 +1,11 @@
 ﻿using DiscordLOLader.Bot;
 using DiscordLOLader.MVVM;
-using DiscordLOLader.Properties;
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Imaging;
+using System.Windows.Media;
 
 
 namespace DiscordLOLader.MainCore
@@ -32,7 +25,7 @@ namespace DiscordLOLader.MainCore
             PictureTimer.Interval = new TimeSpan(0, 0, 1);
 
             PictureSend = new PictureSend(BotCore, ConvertedFile, ThumbCreator);
-            PictureSouse = (BitmapImage)Bitmap(new Uri(@"pack://application:,,,/Resources/Imager.png"));
+            PictureSouse = Bitmap(new Uri(@"pack://application:,,,/Resources/Imager.png"));
             ImageDragDrop = true;
             WaitImageLabel = Visibility.Hidden;
             PictureSend.MessageCompleted += PictureCompleted;
@@ -62,7 +55,7 @@ namespace DiscordLOLader.MainCore
         {
             BlockPictureButtons();
             await Task.Run(() => PictureSend.PrepareImage(PathToPicture).Wait());
-            PictureSouse = (BitmapImage)PictureSend.GetPictureThumb();
+            PictureSouse = ThumbCreator.GetThumb(ConvertedFile.ThumbFile, ".png");
             GetPictureData();
             UnblockPictureButtons();
         }
@@ -105,7 +98,6 @@ namespace DiscordLOLader.MainCore
             if (ButtonSendWork) { ButtonImageWork = true; }
         }
 
-
         private void SendImage()
         {
             BlockPictureButtons();
@@ -123,7 +115,6 @@ namespace DiscordLOLader.MainCore
             get { return _ButtonImageWork; }
             set { _ButtonImageWork = value; OnPropertyChanged("ButtonImageWork"); }
         }
-
 
         private string _OriginalSizeLabel = "0 byte";
         public string OriginalSizeLabel
@@ -145,7 +136,6 @@ namespace DiscordLOLader.MainCore
             get { return _WaitImageLabel; }
             set { _WaitImageLabel = value; OnPropertyChanged("WaitImageLabel"); }
         }
-
 
         private RelayCommand _OpenPathFinder;
         public RelayCommand OpenPathFinder
@@ -175,10 +165,8 @@ namespace DiscordLOLader.MainCore
             set { _ButtonOpenWork = value; OnPropertyChanged("ButtonOpenWork"); }
         }
 
-
-
-        private BitmapImage _PictureSouse;
-        public BitmapImage PictureSouse
+        private ImageSource _PictureSouse;
+        public ImageSource PictureSouse
         {
             get { return _PictureSouse; }
 

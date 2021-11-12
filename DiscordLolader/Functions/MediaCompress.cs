@@ -5,6 +5,8 @@ namespace DiscordLOLader.Functions
 {
     class MediaCompress
     {
+        private readonly char Qu = '"';
+
         private const int MediaHeight = 260;
         private const int MediaWidth = 410;
 
@@ -26,7 +28,7 @@ namespace DiscordLOLader.Functions
             ProcessStartInfo VideoConfig = new ProcessStartInfo
             {
                 FileName = "ffmpeg.exe",
-                Arguments = $@"-i {FilePath} -y -c:v libvpx -quality realtime -speed 15 -minrate {FileBitrate}K -b:v {FileBitrate}K -maxrate {FileBitrate}K -bufsize 75K -s {MediaWidth}x{MediaHeight} -r 22 -crf 4 -c:a libopus -b:a 64K -vbr:a off {CacheFile}",
+                Arguments = $@"-i {Qu}{FilePath}{Qu} -y -c:v libvpx -quality realtime -speed 15 -minrate {FileBitrate}K -b:v {FileBitrate}K -maxrate {FileBitrate}K -bufsize 75K -s {MediaWidth}x{MediaHeight} -r 22 -crf 4 -c:a libopus -b:a 64K -vbr:a off {Qu}{CacheFile}{Qu}",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 CreateNoWindow = true
@@ -47,7 +49,7 @@ namespace DiscordLOLader.Functions
             ProcessStartInfo VideoInfo = new ProcessStartInfo
             {
                 FileName = "ffmpeg.exe",
-                Arguments = $@"-i {FilePath}",
+                Arguments = $@"-i {Qu}{FilePath}{Qu}",
                 UseShellExecute = false,
                 RedirectStandardError = true,
                 CreateNoWindow = true

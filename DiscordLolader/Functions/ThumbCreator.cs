@@ -8,6 +8,8 @@ namespace DiscordLOLader.Functions
 {
     class ThumbCreator
     {
+        private readonly char Qu = '"';
+
         public void CreateThumbMedia(string FilePath, string PathTo)
         {
             try
@@ -15,11 +17,12 @@ namespace DiscordLOLader.Functions
                 ProcessStartInfo VideoConfig = new ProcessStartInfo
                 {
                     FileName = "ffmpeg.exe",
-                    Arguments = $@"-ss 5 -y -i {FilePath} -vframes 1 -s 320x240 -f image2 {PathTo}",
+                    Arguments = $@"-ss 5 -y -i {Qu}{FilePath}{Qu} -vframes 1 -s 320x240 -f image2 {Qu}{PathTo}{Qu}",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true
                 };
+                Console.WriteLine($@"-ss 5 -y -i '{FilePath}' -vframes 1 -s 320x240 -f image2 '{PathTo}'");
                 Process Input = Process.Start(VideoConfig);
                 Input.WaitForExit();
             }

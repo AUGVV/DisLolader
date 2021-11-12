@@ -6,6 +6,8 @@ namespace DiscordLOLader.Functions
 {
     internal class AudioCompress
     {
+        private readonly char Qu = '"';
+
         private string FilePath;
 
         private string CacheFile;
@@ -30,7 +32,7 @@ namespace DiscordLOLader.Functions
                 ProcessStartInfo AudioCompress = new ProcessStartInfo
                 {
                     FileName = "ffmpeg.exe",
-                    Arguments = $@"-i {CacheFile} -y -codec:a libmp3lame -qscale:a {SetBitrate()} {TempPath}",
+                    Arguments = $@"-i {Qu}{CacheFile}{Qu} -y -codec:a libmp3lame -qscale:a {SetBitrate()} {Qu}{TempPath}{Qu}",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true
@@ -74,7 +76,7 @@ namespace DiscordLOLader.Functions
             ProcessStartInfo AudioMetaDelete = new ProcessStartInfo
             {
                 FileName = "ffmpeg.exe",
-                Arguments = $@"-i {FilePath} -y -map_metadata -1 -vn -c:a copy {CacheFile}",
+                Arguments = $@"-i {Qu}{FilePath}{Qu} -y -map_metadata -1 -vn -c:a copy {Qu}{CacheFile}{Qu}",
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 CreateNoWindow = true
@@ -91,7 +93,7 @@ namespace DiscordLOLader.Functions
             ProcessStartInfo AudioInfo = new ProcessStartInfo
             {
                 FileName = "ffmpeg.exe",
-                Arguments = $@"-i {CacheFile}",
+                Arguments = $@"-i {Qu}{CacheFile}{Qu}",
                 UseShellExecute = false,
                 RedirectStandardError = true,
                 CreateNoWindow = true

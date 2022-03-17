@@ -33,9 +33,11 @@ namespace DiscordLOLader.settings
         {
             try
             {
-                JsonConfig json = new JsonConfig();
-                json.Token = token;
-                json.Channel = channel;
+                JsonConfig json = new JsonConfig
+                {
+                    Token = token,
+                    Channel = channel
+                };
                 string forFile = JsonConvert.SerializeObject(json);
                 File.WriteAllText(@$"{Environment.CurrentDirectory}\Settings\config.json", forFile);
 

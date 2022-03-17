@@ -4,6 +4,7 @@ using DiscordLOLader.settings;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace DiscordLOLader.AutorizationCore
 {
@@ -141,10 +142,10 @@ namespace DiscordLOLader.AutorizationCore
             }
         }
 
-        public void TryLogin()
+        public async Task TryLogin()
         {
            _loginEnable = false;
-           bool isGood = BotCore.AutorizationAsync(Token, Login);
+           bool isGood = await BotCore.AutorizationAsync(Token, Login);
            if (!isGood)
            {
                 ErrorLabel = System.Windows.Visibility.Visible;

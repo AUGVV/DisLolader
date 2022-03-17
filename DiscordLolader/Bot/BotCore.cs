@@ -4,7 +4,6 @@ using DSharpPlus.EventArgs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,7 +11,6 @@ using System.Windows.Media.Imaging;
 
 namespace DiscordLOLader.Bot
 {
-
     public class BotCore
     {
         public DiscordClient Discord { get; set; }
@@ -23,21 +21,11 @@ namespace DiscordLOLader.Bot
 
         public ulong GuildId { get; set; }
 
-
         public List<Guild> GuildsList = new List<Guild>();
-
 
         public ObservableCollection<Channel> ChannelList = new ObservableCollection<Channel>();
 
-        public BotCore()
-        {
-            Debug.WriteLine("Bot object");
-        }
-        public void Indication()
-        {
-            Debug.WriteLine("Bot object");
-        }
-        public bool Autorization(string token, string channel)
+        public async Task<bool> AutorizationAsync(string token, string channel)
         {
             if(token == null || token.Length == 0)
             {
@@ -58,18 +46,18 @@ namespace DiscordLOLader.Bot
             {
                 task.Wait();
                 Thread.Sleep(2000);
-                    if (isGuildReal(channel))
-                    {
-                        GetAllChannels();
-                        GuildsClear();
-                        return true;
-                    }
-                    else
-                    {
-                        Discord.DisconnectAsync();
-                        GuildsClear();
-                        return false;
-                    }
+                if (isGuildReal(channel))
+                {
+                    GetAllChannels();
+                    GuildsClear();
+                    return true;
+                }
+                else
+                {
+                    await Discord.DisconnectAsync();
+                    GuildsClear();
+                    return false;
+                }
             }
             catch
             {
@@ -105,11 +93,11 @@ namespace DiscordLOLader.Bot
         {
             foreach(Guild Guild in GuildsList)
             {
-                if(isGuildId(Channel, Guild))
+                if (IsGuildId(Channel, Guild))
                 {
                     return true;
                 }
-                else if (isGuildName(Channel, Guild))
+                else if (IsGuildName(Channel, Guild))
                 {
                     return true;
                 }
@@ -117,7 +105,7 @@ namespace DiscordLOLader.Bot
             return false;
         }
 
-        private bool isGuildId(string Channel, Guild Guild)
+        private bool IsGuildId(string Channel, Guild Guild)
         {
             if (Guild.GuildId.ToString() == Channel)
             {
@@ -127,7 +115,7 @@ namespace DiscordLOLader.Bot
             return false;
         }
 
-        private bool isGuildName(string Channel, Guild Guild)
+        private bool IsGuildName(string Channel, Guild Guild)
         {
             if (Guild.GuildName == Channel)
             {
@@ -174,7 +162,7 @@ namespace DiscordLOLader.Bot
         }
 
         private Task DiscordReady(DiscordClient sender, ReadyEventArgs e)
-        {       
+        {
             return Task.CompletedTask;
         }
 
@@ -184,9 +172,9 @@ namespace DiscordLOLader.Bot
             return Task.CompletedTask;
         }
 
-        public void CloseConnection()
+        public async Task CloseConnectionAsync()
         {
-            Discord.DisconnectAsync();
+            await Discord.DisconnectAsync();
         }
     }
 }

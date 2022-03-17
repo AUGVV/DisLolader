@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace DiscordLOLader.Functions
 {
-    class MediaCompress
+    internal class MediaCompress
     {
         private readonly char Qu = '"';
 
@@ -18,7 +18,7 @@ namespace DiscordLOLader.Functions
         {
             this.FilePath = FilePath;
 
-            InitializationMediaInfo();       
+            InitializationMediaInfo();
             FileBitrate = SetBitrate();
             CompressFile(CacheFile);
         }
@@ -39,7 +39,7 @@ namespace DiscordLOLader.Functions
 
         private string SetBitrate()
         {
-            double kbs = (8000 * 8 / FileDuration)-64;
+            double kbs = (8000 * 8 / FileDuration) - 64;
             return Convert.ToInt32(kbs).ToString();
         }
 
@@ -62,7 +62,7 @@ namespace DiscordLOLader.Functions
 
         private void GetDuration()
         {
-            Duration = Duration.Substring(Duration.IndexOf("Duration")).Substring(10, 11);
+            Duration = Duration[Duration.IndexOf("Duration")..].Substring(10, 11);
             DateTime DurationTime = Convert.ToDateTime(Duration);
             FileDuration = DurationTime.Minute * 60 + DurationTime.Second + 1;
         }

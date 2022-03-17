@@ -7,13 +7,12 @@ using System.Windows.Media.Imaging;
 
 namespace DiscordLOLader.Bot
 {
-    class PictureSend : FileToConvert
+    internal class PictureSend : FileToConvert
     {
-        private BotCore Bot;
+        private readonly BotCore Bot;
         private ConvertedFile ConvertedFile;
-        private ThumbCreator ThumbCreator;
-        private DiscordMessageBuilder Builder;
-        
+        private readonly ThumbCreator ThumbCreator;
+        private readonly DiscordMessageBuilder Builder;
         public delegate void Handler(bool button);
         public event Handler MessageCompleted;
 
@@ -24,7 +23,7 @@ namespace DiscordLOLader.Bot
             this.Bot = Bot;
             this.ConvertedFile = ConvertedFile;
             this.ThumbCreator = ThumbCreator;
-            Builder = new DiscordMessageBuilder();      
+            Builder = new DiscordMessageBuilder();
         }
 
         public Task PrepareImage(string Path)
@@ -51,11 +50,9 @@ namespace DiscordLOLader.Bot
 
         private void SaveCompressedFile(BitmapEncoder Encoder)
         {
-            using (FileStream fileStream = new FileStream(ConvertedFile.FilePath, FileMode.Create))
-            {
-                Encoder.Save(fileStream);
-                fileStream.Close();
-            }
+            using FileStream fileStream = new FileStream(ConvertedFile.FilePath, FileMode.Create);
+            Encoder.Save(fileStream);
+            fileStream.Close();
         }
 
         private int GetTargetWidth(BitmapImage Bitmap)
@@ -101,13 +98,13 @@ namespace DiscordLOLader.Bot
             return Bitmap;
         }
 
-        FileStream FileReader;
+        private FileStream FileReader;
         public void RecieveImage(ulong channelid)
         {
-             FileReader = File.OpenRead(ConvertedFile.FilePath);
-             Builder.WithFile(FileReader);   
-             Bot.ConnectedGuild.GetChannel(channelid).SendMessageAsync(Builder).ContinueWith(OnEvent);
-             Builder.Clear();
+            FileReader = File.OpenRead(ConvertedFile.FilePath);
+            Builder.WithFile(FileReader);
+            Bot.ConnectedGuild.GetChannel(channelid).SendMessageAsync(Builder).ContinueWith(OnEvent);
+            Builder.Clear();
         }
 
         private void OnEvent(Task t)

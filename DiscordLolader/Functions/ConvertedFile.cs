@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Text;
 
 namespace DiscordLOLader.Functions
 {
-    class ConvertedFile
+    internal class ConvertedFile
     {
         public enum FileType
         {
@@ -16,9 +13,8 @@ namespace DiscordLOLader.Functions
             SoundWav,
             None
         }
-        
-        public string FilePath { get; set; }
 
+        public string FilePath { get; set; }
         public long FileSize { get; set; }
 
         public string FileExtension { get; set; }
@@ -57,11 +53,11 @@ namespace DiscordLOLader.Functions
             }
         }
 
-         private void PngExtension()
-         {
+        private void PngExtension()
+        {
             FileExtension = ".png";
             GetFullPath(FileExtension);
-         }
+        }
 
         private void WebmExtension()
         {

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-
 namespace DiscordLOLader.MainCore
 {
     public partial class MainModelView : INotifyPropertyChanged
@@ -39,7 +38,7 @@ namespace DiscordLOLader.MainCore
         private int _PictureProgress = 0;
         public int PictureProgress
         {
-            get { return _PictureProgress; }
+            get => _PictureProgress;
             set { _PictureProgress = value; OnPropertyChanged("PictureProgress"); }
         }
 
@@ -47,8 +46,8 @@ namespace DiscordLOLader.MainCore
         private string _PathToPicture;
         public string PathToPicture
         {
-            get { return _PathToPicture; }
-            set { _PathToPicture = value; OnPropertyChanged("PathToPicture"); if(PathToPicture != "") PreparePictureAsync(); }
+            get => _PathToPicture;
+            set { _PathToPicture = value; OnPropertyChanged("PathToPicture"); if (PathToPicture != "") PreparePictureAsync(); }
         }
 
         private async void PreparePictureAsync()
@@ -73,11 +72,11 @@ namespace DiscordLOLader.MainCore
         private bool _ImageDragDrop = false;
         public bool ImageDragDrop
         {
-            get { return _ImageDragDrop; }
+            get => _ImageDragDrop;
             set { _ImageDragDrop = value; OnPropertyChanged("ImageDragDrop"); }
         }
 
-        void BlockPictureButtons()
+        private void BlockPictureButtons()
         {
             PictureTimer.Start();
             WaitImageLabel = Visibility.Visible;
@@ -85,9 +84,9 @@ namespace DiscordLOLader.MainCore
             ButtonImageWork = false;
             ButtonOpenWork = false;
             ImageDragDrop = false;
-
         }
-        void UnblockPictureButtons()
+
+        private void UnblockPictureButtons()
         {
             PictureTimer.Stop();
             PictureProgress = 0;
@@ -112,43 +111,37 @@ namespace DiscordLOLader.MainCore
         private bool _ButtonImageWork = false;
         public bool ButtonImageWork
         {
-            get { return _ButtonImageWork; }
+            get => _ButtonImageWork;
             set { _ButtonImageWork = value; OnPropertyChanged("ButtonImageWork"); }
         }
 
         private string _OriginalSizeLabel = "0 byte";
         public string OriginalSizeLabel
         {
-            get { return _OriginalSizeLabel; }
+            get => _OriginalSizeLabel;
             set { _OriginalSizeLabel = value; OnPropertyChanged("OriginalSizeLabel"); }
         }
 
         private string _ResultSizeLabel = "0 byte";
         public string ResultSizeLabel
         {
-            get { return _ResultSizeLabel; }
+            get => _ResultSizeLabel;
             set { _ResultSizeLabel = value; OnPropertyChanged("ResultSizeLabel"); }
         }
 
         private Visibility _WaitImageLabel;
         public Visibility WaitImageLabel
         {
-            get { return _WaitImageLabel; }
+            get => _WaitImageLabel;
             set { _WaitImageLabel = value; OnPropertyChanged("WaitImageLabel"); }
         }
 
         private RelayCommand _OpenPathFinder;
-        public RelayCommand OpenPathFinder
-        {
-            get
-            {
-                return _OpenPathFinder ??
+        public RelayCommand OpenPathFinder => _OpenPathFinder ??
                   (_OpenPathFinder = new RelayCommand(obj =>
                   {
                       PathToPicture = OpenDialog();
                   }));
-            }
-        }
 
         private string OpenDialog()
         {
@@ -161,15 +154,14 @@ namespace DiscordLOLader.MainCore
         private bool _ButtonOpenWork = true;
         public bool ButtonOpenWork
         {
-            get { return _ButtonOpenWork; }
+            get => _ButtonOpenWork;
             set { _ButtonOpenWork = value; OnPropertyChanged("ButtonOpenWork"); }
         }
 
         private ImageSource _PictureSouse;
         public ImageSource PictureSouse
         {
-            get { return _PictureSouse; }
-
+            get => _PictureSouse;
             set { _PictureSouse = value; OnPropertyChanged("PictureSouse"); }
         }
     }

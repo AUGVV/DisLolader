@@ -1,39 +1,35 @@
 ﻿using DiscordLOLader.Bot;
 using DSharpPlus.Entities;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+using System.Threading.Tasks;
 
 namespace DiscordLOLader.Functions
 {
-    class BotControl
+    internal class BotControl
     {
-
-        BotCore Bot;
+        private readonly BotCore Bot;
 
         public BotControl(BotCore Bot)
         {
             this.Bot = Bot;
         }
-            
-        public void ChangeState(string State)
+
+        public async Task ChangeStateAsync(string State)
         {
-            if(State == "В сети")
+            if (State == "В сети")
             {
-                _ = Bot.Discord.UpdateStatusAsync(null, UserStatus.Online);
+                await Bot.Discord.UpdateStatusAsync(null, UserStatus.Online);
             }
-            else if(State == "Неактивен")
+            else if (State == "Неактивен")
             {
-                _ = Bot.Discord.UpdateStatusAsync(null, UserStatus.Idle);
+                await Bot.Discord.UpdateStatusAsync(null, UserStatus.Idle);
             }
-            else if(State == "Не беспокоить")
+            else if (State == "Не беспокоить")
             {
-                _ = Bot.Discord.UpdateStatusAsync(null, UserStatus.DoNotDisturb);
+                await Bot.Discord.UpdateStatusAsync(null, UserStatus.DoNotDisturb);
             }
-            else if(State == "Невидимый")
+            else if (State == "Невидимый")
             {
-                _ = Bot.Discord.UpdateStatusAsync(null, UserStatus.Invisible);
+                await Bot.Discord.UpdateStatusAsync(null, UserStatus.Invisible);
             }
         }
     }

@@ -16,11 +16,11 @@ namespace DiscordLOLader.MainCore
     {
         public ObservableCollection<Channel> Chan { get; set; }
 
-        private BotCore BotCore;
-        private bool isChannelSelected = false;     
-        private BotControl BotsControl;
-        private ConvertedFile ConvertedFile;
-        private ThumbCreator ThumbCreator;
+        private readonly BotCore BotCore;
+        private bool isChannelSelected = false;
+        private readonly BotControl BotsControl;
+        private readonly ConvertedFile ConvertedFile;
+        private readonly ThumbCreator ThumbCreator;
 
         public MainModelView(BotCore BotRecieved)
         {
@@ -52,7 +52,7 @@ namespace DiscordLOLader.MainCore
         private Channel _SelChannel;
         public Channel SelChannel
         {
-            get { return _SelChannel; }
+            get => _SelChannel;
             set
             {
                 _SelChannel = value;
@@ -75,63 +75,59 @@ namespace DiscordLOLader.MainCore
         private TextBlock _SelMode;
         public TextBlock SelMode
         {
-            get { return _SelMode; }
-            set { _SelMode = value;  BotsControl.ChangeState(SelMode.Text); OnPropertyChanged("_SelColor"); }
+            get => _SelMode;
+            set { _SelMode = value; BotsControl.ChangeStateAsync(SelMode.Text); OnPropertyChanged("_SelColor"); }
         }
 
 
         private Colors _SelColor;
         public Colors SelColor
         {
-            get { return _SelColor; }
+            get => _SelColor;
             set { _SelColor = value; OnPropertyChanged("_SelColor"); }
         }
 
         private string _GuildName;
         public string GuildName
         {
-            get { return _GuildName; }
+            get => _GuildName;
             set { _GuildName = value; OnPropertyChanged("GuildName"); }
         }
 
         private string _GuildId;
         public string GuildId
         {
-            get { return _GuildId; }
+            get => _GuildId;
             set { _GuildId = value; OnPropertyChanged("GuildName"); }
         }
 
         private BitmapImage _GuildImage;
         public BitmapImage GuildImage
         {
-            get { return _GuildImage; }
+            get => _GuildImage;
             set { _GuildImage = value; OnPropertyChanged("GuildImage"); }
         }
 
         private RelayCommand _Close;
-        public RelayCommand Close => _Close ?? (_Close = new RelayCommand(obj => { BotCore.CloseConnection(); Environment.Exit(0); }));
+        public RelayCommand Close => _Close ??= new RelayCommand(async obj => { await BotCore.CloseConnectionAsync(); Environment.Exit(0); });
 
         private RelayCommand _RestartApp;
-        public RelayCommand RestartApp => _RestartApp ?? (_RestartApp = new RelayCommand(obj => { _ = Process.Start(@$"{Environment.CurrentDirectory}\{AppDomain.CurrentDomain.FriendlyName}.exe"); Environment.Exit(0); }));
+        public RelayCommand RestartApp => _RestartApp ??= new RelayCommand(obj => { _ = Process.Start(@$"{Environment.CurrentDirectory}\{AppDomain.CurrentDomain.FriendlyName}.exe"); Environment.Exit(0); });
 
         private RelayCommand _Turn;
-        public RelayCommand Turn
-        {
-            get { return _Turn ??= new RelayCommand(obj => { MinimizedOn = WindowState.Minimized; }); }
-        }
+        public RelayCommand Turn => _Turn ??= new RelayCommand(obj => { MinimizedOn = WindowState.Minimized; });
 
         private WindowState _MinimizedOn;
         public WindowState MinimizedOn
         {
-            get { return _MinimizedOn; }
+            get => _MinimizedOn;
             set { _MinimizedOn = value; OnPropertyChanged("MinimizedOn"); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

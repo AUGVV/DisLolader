@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 
 namespace DiscordLOLader.Functions
 {
-    abstract class FileToConvert
+    internal abstract class FileToConvert
     {
         protected internal string FilePath { get; set; }
 

@@ -12,7 +12,6 @@ namespace DiscordLOLader.MainCore
 {
     public partial class MainModelView : INotifyPropertyChanged
     {
-
         private bool isMediaSending;
         private bool isSendButtonWork;
         private System.Windows.Threading.DispatcherTimer MediaTimer;

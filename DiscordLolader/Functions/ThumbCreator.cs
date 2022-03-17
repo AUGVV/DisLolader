@@ -6,7 +6,7 @@ using System.Windows.Media.Imaging;
 
 namespace DiscordLOLader.Functions
 {
-    class ThumbCreator
+    internal class ThumbCreator
     {
         private readonly char Qu = '"';
 
@@ -22,7 +22,6 @@ namespace DiscordLOLader.Functions
                     RedirectStandardOutput = true,
                     CreateNoWindow = true
                 };
-                Console.WriteLine($@"-ss 5 -y -i '{FilePath}' -vframes 1 -s 320x240 -f image2 '{PathTo}'");
                 Process Input = Process.Start(VideoConfig);
                 Input.WaitForExit();
             }

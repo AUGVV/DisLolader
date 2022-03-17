@@ -3,12 +3,11 @@ using DSharpPlus.Entities;
 using System;
 using System.Collections.ObjectModel;
 
-
 namespace DiscordLOLader.Bot
 {
-    class EmbedSend
+    internal class EmbedSend
     {
-        BotCore Bot;
+        private readonly BotCore Bot;
         public ObservableCollection<Colors> ColorsList { get; private set; }
 
         public string MainText { get; set; } = "";

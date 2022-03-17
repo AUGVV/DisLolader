@@ -7,7 +7,8 @@ namespace DiscordLOLader.Bot
     {
         public Guild(ulong GuildId, string GuildName, string IconPath)
         {
-            this.GuildId = GuildId; this.IconPath = IconPath;
+            this.GuildId = GuildId;
+            this.IconPath = IconPath;
             this.GuildName = GuildName;
         }
 
@@ -31,15 +32,14 @@ namespace DiscordLOLader.Bot
     public struct Colors
     {
         public SolidColorBrush ColorFill { get; set; }
-        public DiscordColor color { get; set; }
+        public DiscordColor Color { get; set; }
         public string ColorName  { get; set; }
 
-        
         public Colors(string ColorName,  DiscordColor color)
         {
             this.ColorName = ColorName;
-            this.color = color;
-            this.ColorFill = new SolidColorBrush(Color.FromRgb(color.R,color.G,color.B));
+            Color = color;
+            ColorFill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(color.R, color.G, color.B));
         }
     }
 }

@@ -1,26 +1,23 @@
 ﻿using DiscordLOLader.Functions;
 using DSharpPlus.Entities;
-using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 
 namespace DiscordLOLader.Bot
 {
-    class MediaSend : FileToConvert
+    internal class MediaSend : FileToConvert
     {
-        private BotCore Bot;
-        private ConvertedFile ConvertedFile;
-        private DiscordMessageBuilder Builder;
-        private AudioCompress AudioCompress;
-        private MediaCompress MediaCompress;
-        private ThumbCreator ThumbCreator;
+        private const double Lock = 8388608;
+
+        private readonly BotCore Bot;
+        private readonly ConvertedFile ConvertedFile;
+        private readonly DiscordMessageBuilder Builder;
+        private readonly AudioCompress AudioCompress;
+        private readonly MediaCompress MediaCompress;
+        private readonly ThumbCreator ThumbCreator;
 
         public delegate void Handler(bool button);
         public event Handler MediaSendingCompleted;
-
-        private const double Lock = 8388608;
 
         public MediaSend(BotCore Bot, ConvertedFile ConvertedFile, ThumbCreator ThumbCreator)
         {
@@ -31,7 +28,6 @@ namespace DiscordLOLader.Bot
             this.ThumbCreator = ThumbCreator;
             Builder = new DiscordMessageBuilder();
         }
-
         public Task PrepareMedia(string Path)
         {
             FileInitialization(Path);
@@ -72,13 +68,13 @@ namespace DiscordLOLader.Bot
             }
         }
 
-        FileStream FileReader; 
+        private FileStream FileReader;
         public void MediaFileSend(ulong channelid)
         {
             if (ConvertedFile.FilePath != "" || !File.Exists(ConvertedFile.FilePath))
             {
                 FileReader = File.OpenRead(ConvertedFile.FilePath);
-                _ = Builder.WithFile(FileName, FileReader);;
+                _ = Builder.WithFile(FileName, FileReader);
                 _ = Bot.ConnectedGuild.GetChannel(channelid).SendMessageAsync(Builder).ContinueWith(OnEvent);
                 Builder.Clear();
             }
